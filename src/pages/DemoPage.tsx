@@ -7,6 +7,7 @@ import { GeminiExplanationPanel } from '@/components/evidence/GeminiExplanationP
 import { TamperEvidentCard } from '@/components/evidence/TamperEvidentCard';
 import { ShareModal } from '@/components/evidence/ShareModal';
 import { EvidenceReportCard } from '@/components/evidence/EvidenceReportCard';
+import { SideBySideComparison } from '@/components/evidence/SideBySideComparison';
 import { 
   Sparkles, 
   Layers, 
@@ -16,7 +17,8 @@ import {
   ShieldCheck, 
   Info,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  GitCompare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -137,7 +139,7 @@ export const DemoPage: React.FC = () => {
 
       {/* Main Interactive Evidentiary Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-muted p-1 rounded-lg w-full sm:w-auto grid grid-cols-4 sm:flex">
+        <TabsList className="bg-muted p-1 rounded-lg w-full sm:w-auto grid grid-cols-5 sm:flex">
           <TabsTrigger value="spatial" className="text-xs font-medium gap-1.5">
             <Layers className="w-3.5 h-3.5 hidden sm:inline" />
             <span>Interactive Spatial Viewer</span>
@@ -149,6 +151,10 @@ export const DemoPage: React.FC = () => {
           <TabsTrigger value="reasoning" className="text-xs font-medium gap-1.5">
             <Sparkles className="w-3.5 h-3.5 hidden sm:inline" />
             <span>Gemini Reasoning</span>
+          </TabsTrigger>
+          <TabsTrigger value="comparison" className="text-xs font-medium gap-1.5">
+            <GitCompare className="w-3.5 h-3.5 hidden sm:inline" />
+            <span>Side-by-Side</span>
           </TabsTrigger>
           <TabsTrigger value="security" className="text-xs font-medium gap-1.5">
             <Lock className="w-3.5 h-3.5 hidden sm:inline" />
@@ -180,6 +186,10 @@ export const DemoPage: React.FC = () => {
               setActiveTab('spatial');
             }}
           />
+        </TabsContent>
+
+        <TabsContent value="comparison" className="space-y-4 m-0 focus-visible:outline-hidden">
+          <SideBySideComparison currentRecord={record} />
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4 m-0 focus-visible:outline-hidden">

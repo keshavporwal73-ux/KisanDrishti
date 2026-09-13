@@ -11,11 +11,16 @@ import {
   CheckCircle2, 
   AlertTriangle,
   Eye,
-  ShieldAlert
+  ShieldAlert,
+  Ruler,
+  SlidersHorizontal,
+  Flame,
+  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SpatialEvidenceViewerProps {
   imageUrl: string;
@@ -27,6 +32,8 @@ interface SpatialEvidenceViewerProps {
   onSelectMarker?: (marker: DetectionMarker | null) => void;
 }
 
+type ExtendedFilter = 'all' | 'foreign_object' | 'broken_grain' | 'discolored_shriveled' | 'visible_physical_damage' | 'critical' | 'minor';
+
 export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
   imageUrl,
   stats,
@@ -36,18 +43,31 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
   initialSelectedId,
   onSelectMarker,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | DefectCategory>('all');
+  const { t } = useLanguage();
+  const [selectedCategory, setSelectedCategory] = useState<ExtendedFilter>('all');
   const [activeMarkerId, setActiveMarkerId] = useState<number | null>(initialSelectedId || 1);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [panPosition, setPanPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [showGridOverlay, setShowGridOverlay] = useState<boolean>(true);
 
+  // Millimeter Ruler Tool State
+  const [isRulerActive, setIsRulerActive] = useState<boolean>(false);
+  const [rulerPoints, setRulerPoints] = useState<Array<{ xPercent: number; yPercent: number }>>([]);
+  const [measuredDistanceMm, setMeasuredDistanceMm] = useState<number | null>(null);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const activeMarker = detections.find(d => d.id === activeMarkerId) || null;
+
+  // Critical defects: Foreign objects or broken grains > 3.5mm
+  // Minor defects: slight discoloration or small scuffs
+  const criticalDetections = detections.filter(d => d.category === 'foreign_object' || (d.category === 'broken_grain' && d.estimatedSizeMm >= 3.5));
+  const minorDetections = detections.filter(d => !criticalDetections.some(c => c.id === d.id));
 
   // Filter markers based on selected category
   const visibleDetections = detections.filter(d => {
     if (selectedCategory === 'all') return true;
+    if (selectedCategory === 'critical') return criticalDetections.some(c => c.id === d.id);
+    if (selectedCategory === 'minor') return minorDetections.some(m => m.id === d.id);
     if (selectedCategory === 'foreign_object') return d.category === 'foreign_object';
     if (selectedCategory === 'broken_grain') return d.category === 'broken_grain';
     if (selectedCategory === 'discolored_shriveled') return d.category === 'discolored_shriveled' || d.category === 'immature';
@@ -60,7 +80,7 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
     setActiveMarkerId(marker.id);
     onSelectMarker?.(marker);
 
-    // Calculate center offset for zoom target (percentage to pixel translate)
+    // Calculate center offset for zoom target
     const targetX = (50 - marker.xPercent) * 2.2;
     const targetY = (50 - marker.yPercent) * 2.2;
 
@@ -73,10 +93,12 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
     setPanPosition({ x: 0, y: 0 });
   };
 
-  const handleSelectCategory = (cat: 'all' | DefectCategory) => {
+  const handleSelectCategory = (cat: ExtendedFilter) => {
     setSelectedCategory(cat);
     const matching = detections.filter(d => {
       if (cat === 'all') return true;
+      if (cat === 'critical') return criticalDetections.some(c => c.id === d.id);
+      if (cat === 'minor') return minorDetections.some(m => m.id === d.id);
       if (cat === 'foreign_object') return d.category === 'foreign_object';
       if (cat === 'broken_grain') return d.category === 'broken_grain';
       if (cat === 'discolored_shriveled') return d.category === 'discolored_shriveled' || d.category === 'immature';
@@ -91,6 +113,33 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
     }
   };
 
+  // Handle click on the canvas for the Millimeter Ruler Tool
+  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isRulerActive || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const xPercent = (clickX / rect.width) * 100;
+    const yPercent = (clickY / rect.height) * 100;
+
+    if (rulerPoints.length === 0 || rulerPoints.length >= 2) {
+      setRulerPoints([{ xPercent, yPercent }]);
+      setMeasuredDistanceMm(null);
+    } else if (rulerPoints.length === 1) {
+      const p1 = rulerPoints[0];
+      const p2 = { xPercent, yPercent };
+      setRulerPoints([p1, p2]);
+
+      // Calculate distance: 100% canvas corresponds to ~110mm field of view (100mm inside grid)
+      const dx = (p2.xPercent - p1.xPercent) * 1.1;
+      const dy = (p2.yPercent - p1.yPercent) * 1.1;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      setMeasuredDistanceMm(Number(dist.toFixed(1)));
+    }
+  };
+
   useEffect(() => {
     const firstAnomaly = detections.find(d => d.isHighPriorityAnomaly) || detections[0];
     if (firstAnomaly && !initialSelectedId) {
@@ -100,7 +149,7 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      {/* Observable Visual Evidence Category Filter Pills */}
+      {/* Observable Visual Evidence Category & Severity Filter Pills */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
         <button
           type="button"
@@ -117,6 +166,39 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
           </span>
         </button>
 
+        {/* Critical Visual Defects */}
+        <button
+          type="button"
+          onClick={() => handleSelectCategory('critical')}
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            selectedCategory === 'critical'
+              ? 'bg-red-800 text-white shadow-xs'
+              : 'bg-red-600/10 text-red-800 dark:text-red-300 hover:bg-red-600/20'
+          }`}
+        >
+          <Flame className="w-3.5 h-3.5 text-red-500" />
+          <span>Critical Defects</span>
+          <span className="px-1.5 py-0.2 bg-red-900/30 rounded-full text-[10px] font-mono font-bold">
+            {criticalDetections.length}
+          </span>
+        </button>
+
+        {/* Minor Visual Defects */}
+        <button
+          type="button"
+          onClick={() => handleSelectCategory('minor')}
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+            selectedCategory === 'minor'
+              ? 'bg-stone-800 text-white shadow-xs'
+              : 'bg-stone-500/10 text-stone-800 dark:text-stone-300 hover:bg-stone-500/20'
+          }`}
+        >
+          <span>Minor Defects</span>
+          <span className="px-1.5 py-0.2 bg-stone-900/20 rounded-full text-[10px] font-mono">
+            {minorDetections.length}
+          </span>
+        </button>
+
         <button
           type="button"
           onClick={() => handleSelectCategory('foreign_object')}
@@ -127,7 +209,7 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
           }`}
         >
           <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-          <span>Foreign Objects</span>
+          <span>{t.foreignObjects || 'Foreign Objects'}</span>
           <span className="px-1.5 py-0.2 bg-red-800/30 rounded-full text-[10px] font-mono">
             {stats.foreignObjectCount}
           </span>
@@ -142,7 +224,7 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
               : 'bg-amber-500/10 text-amber-800 dark:text-amber-300 hover:bg-amber-500/20'
           }`}
         >
-          <span>Broken / Damaged</span>
+          <span>{t.brokenDamaged || 'Broken / Damaged'}</span>
           <span className="px-1.5 py-0.2 bg-amber-800/30 rounded-full text-[10px] font-mono">
             {stats.brokenPercent}%
           </span>
@@ -157,24 +239,9 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
               : 'bg-orange-500/10 text-orange-800 dark:text-orange-300 hover:bg-orange-500/20'
           }`}
         >
-          <span>Discoloration</span>
+          <span>{t.discoloration || 'Discoloration'}</span>
           <span className="px-1.5 py-0.2 bg-orange-800/30 rounded-full text-[10px] font-mono">
             {stats.discoloredPercent}%
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleSelectCategory('visible_physical_damage')}
-          className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-            selectedCategory === 'visible_physical_damage'
-              ? 'bg-stone-800 text-white shadow-xs'
-              : 'bg-stone-500/10 text-stone-800 dark:text-stone-300 hover:bg-stone-500/20'
-          }`}
-        >
-          <span>Visible Physical Scuffs</span>
-          <span className="px-1.5 py-0.2 bg-stone-800/30 rounded-full text-[10px] font-mono">
-            {stats.visibleDamagePercent}%
           </span>
         </button>
       </div>
@@ -191,7 +258,7 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
             <div className="absolute top-3 left-3 z-30 flex items-center gap-1 bg-stone-900/90 backdrop-blur text-white px-2 py-1 rounded-lg border border-stone-700 text-xs shadow-md">
               <span className="font-mono text-[11px] font-semibold text-emerald-400 mr-1 flex items-center gap-1">
                 <Crosshair className="w-3.5 h-3.5" />
-                10x10cm Calibrated Grid
+                10x10cm Grid
               </span>
               <button
                 type="button"
@@ -225,17 +292,47 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
               >
                 <Layers className="w-3.5 h-3.5" />
               </button>
+              
+              {/* Millimeter Ruler Tool Toggle */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRulerActive(!isRulerActive);
+                  setRulerPoints([]);
+                  setMeasuredDistanceMm(null);
+                }}
+                className={`p-1 rounded transition-colors flex items-center gap-1 text-[11px] font-mono px-1.5 ${
+                  isRulerActive ? 'bg-amber-600 text-white font-bold' : 'text-stone-400 hover:text-white'
+                }`}
+                title="Toggle Millimeter Measurement Ruler"
+              >
+                <Ruler className="w-3.5 h-3.5" />
+                <span>Ruler</span>
+              </button>
             </div>
 
-            {/* Hint overlay */}
-            <div className="absolute top-3 right-3 z-30 bg-stone-900/80 backdrop-blur text-stone-300 px-2 py-1 rounded text-[10px] font-mono border border-stone-700 pointer-events-none hidden sm:block">
-              Tap any pin to zoom & inspect
+            {/* Hint / Ruler Status overlay */}
+            <div className="absolute top-3 right-3 z-30 bg-stone-900/80 backdrop-blur text-stone-300 px-2 py-1 rounded text-[10px] font-mono border border-stone-700 pointer-events-none">
+              {isRulerActive ? (
+                measuredDistanceMm !== null ? (
+                  <span className="text-amber-400 font-bold">Measured: {measuredDistanceMm} mm</span>
+                ) : rulerPoints.length === 1 ? (
+                  <span className="text-amber-300">Click 2nd point to measure</span>
+                ) : (
+                  <span className="text-amber-300">Click 2 points on grid</span>
+                )
+              ) : (
+                'Tap any pin to zoom & inspect'
+              )}
             </div>
 
             {/* Pan & Zoom Canvas Area */}
             <div 
               ref={containerRef}
-              className="w-full h-full relative transition-transform duration-500 ease-out flex items-center justify-center cursor-crosshair"
+              onClick={handleCanvasClick}
+              className={`w-full h-full relative transition-transform duration-500 ease-out flex items-center justify-center ${
+                isRulerActive ? 'cursor-crosshair' : 'cursor-pointer'
+              }`}
               style={{
                 transform: `scale(${zoomLevel}) translate(${panPosition.x}px, ${panPosition.y}px)`,
                 transformOrigin: 'center center',
@@ -261,8 +358,50 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
                 </div>
               </div>
 
+              {/* Ruler Drawn Line & Points */}
+              {isRulerActive && rulerPoints.length > 0 && (
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-30">
+                  {rulerPoints.map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={`${pt.xPercent}%`}
+                      cy={`${pt.yPercent}%`}
+                      r="4"
+                      fill="#f59e0b"
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                    />
+                  ))}
+                  {rulerPoints.length === 2 && (
+                    <>
+                      <line
+                        x1={`${rulerPoints[0].xPercent}%`}
+                        y1={`${rulerPoints[0].yPercent}%`}
+                        x2={`${rulerPoints[1].xPercent}%`}
+                        y2={`${rulerPoints[1].yPercent}%`}
+                        stroke="#f59e0b"
+                        strokeWidth="2.5"
+                        strokeDasharray="4 2"
+                      />
+                      <text
+                        x={`${(rulerPoints[0].xPercent + rulerPoints[1].xPercent) / 2}%`}
+                        y={`${(rulerPoints[0].yPercent + rulerPoints[1].yPercent) / 2 - 2}%`}
+                        fill="#fef08a"
+                        fontSize="12"
+                        fontWeight="bold"
+                        fontFamily="monospace"
+                        textAnchor="middle"
+                        className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                      >
+                        {measuredDistanceMm} mm
+                      </text>
+                    </>
+                  )}
+                </svg>
+              )}
+
               {/* Interactive Numbered Detection Bounding Boxes & Pins */}
-              {visibleDetections.map((marker) => {
+              {!isRulerActive && visibleDetections.map((marker) => {
                 const isActive = marker.id === activeMarkerId;
                 const isForeign = marker.category === 'foreign_object';
                 const isBroken = marker.category === 'broken_grain';
@@ -453,15 +592,15 @@ export const SpatialEvidenceViewer: React.FC<SpatialEvidenceViewerProps> = ({
                       zoomToMarker(next);
                     }}
                   >
-                    Next Anomaly
+                    Next
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ) : (
-            <Card className="border border-dashed border-border p-6 text-center text-muted-foreground">
-              <Eye className="w-8 h-8 mx-auto mb-2 text-primary opacity-60" />
-              <p className="text-xs">Select any numbered observation pin on the image to inspect its calibrated visual evidence.</p>
+            <Card className="border border-border p-6 text-center text-muted-foreground text-xs">
+              <Crosshair className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              <span>Select any numbered pin or defect chip on the optical grid to inspect its observable visual geometry.</span>
             </Card>
           )}
 

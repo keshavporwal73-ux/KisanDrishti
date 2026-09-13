@@ -8,29 +8,44 @@ import {
   BookOpen, 
   Menu, 
   CheckCircle2,
-  Scale
+  Scale,
+  Languages
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage, Language } from '@/context/LanguageContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   const navLinks = [
     { name: 'Dashboard', path: '/' },
-    { name: 'Start Audit', path: '/audit/new', highlight: true },
-    { name: 'Evidence Records', path: '/records' },
-    { name: 'Demo Mode', path: '/demo', badge: 'Wheat Sample' },
-    { name: 'Calibration Sheet', path: '/calibration-sheet' },
-    { name: 'How It Works', path: '/protocol' },
+    { name: t.startAudit || 'Start Audit', path: '/audit/new', highlight: true },
+    { name: t.records || 'Evidence Records', path: '/records' },
+    { name: t.demoMode || 'Demo Mode', path: '/demo', badge: 'Wheat Sample' },
+    { name: t.calibrationSheet || 'Calibration Sheet', path: '/calibration-sheet' },
+    { name: t.protocol || 'How It Works', path: '/protocol' },
   ];
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
     if (path !== '/' && location.pathname.startsWith(path)) return true;
     return false;
+  };
+
+  const getLanguageLabel = (l: Language) => {
+    if (l === 'hi') return 'हिन्दी';
+    if (l === 'pa') return 'ਪੰਜਾਬੀ';
+    return 'English';
   };
 
   return (
@@ -45,14 +60,14 @@ export const Header: React.FC = () => {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="font-serif font-bold text-lg text-foreground tracking-tight group-hover:text-primary transition-colors">
-                KisanDrishti
+                {t.appName || 'KisanDrishti'}
               </span>
               <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary font-mono hidden sm:inline-flex">
                 Tamper-Evident Protocol
               </Badge>
             </div>
             <span className="text-[11px] text-muted-foreground font-medium italic tracking-wide">
-              Evidence Before Valuation.
+              {t.tagline || 'Evidence Before Valuation.'}
             </span>
           </div>
         </Link>
@@ -82,12 +97,34 @@ export const Header: React.FC = () => {
           })}
         </nav>
 
-        {/* Action Button & Mobile Menu */}
+        {/* Language Selector + Action Button & Mobile Menu */}
         <div className="flex items-center gap-2">
+          
+          {/* Multi-Language Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 px-2 text-xs font-medium gap-1.5">
+                <Languages className="w-3.5 h-3.5 text-primary" />
+                <span>{getLanguageLabel(language)}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="text-xs">
+              <DropdownMenuItem onClick={() => setLanguage('en')} className={language === 'en' ? 'font-bold text-primary' : ''}>
+                English (Default)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage('hi')} className={language === 'hi' ? 'font-bold text-primary' : ''}>
+                हिन्दी (Hindi)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage('pa')} className={language === 'pa' ? 'font-bold text-primary' : ''}>
+                ਪੰਜਾਬੀ (Punjabi)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button asChild size="sm" className="hidden sm:inline-flex bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
             <Link to="/audit/new">
               <Camera className="w-4 h-4 mr-1.5" />
-              New Audit
+              {t.startAudit || 'New Audit'}
             </Link>
           </Button>
 
@@ -105,10 +142,10 @@ export const Header: React.FC = () => {
                   <SheetHeader className="text-left pb-4 border-b border-border">
                     <SheetTitle className="font-serif text-lg font-bold flex items-center gap-2">
                       <Scale className="w-5 h-5 text-primary" />
-                      KisanDrishti
+                      {t.appName || 'KisanDrishti'}
                     </SheetTitle>
                     <p className="text-xs text-muted-foreground italic">
-                      Evidence Before Valuation.
+                      {t.tagline || 'Evidence Before Valuation.'}
                     </p>
                   </SheetHeader>
 
@@ -142,7 +179,7 @@ export const Header: React.FC = () => {
                   <Button asChild className="w-full bg-primary text-primary-foreground" onClick={() => setMobileMenuOpen(false)}>
                     <Link to="/audit/new">
                       <Camera className="w-4 h-4 mr-2" />
-                      Start New Audit
+                      {t.startAudit || 'Start New Audit'}
                     </Link>
                   </Button>
                   <p className="text-[10px] text-center text-muted-foreground">

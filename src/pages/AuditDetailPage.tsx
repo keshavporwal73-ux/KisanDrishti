@@ -7,6 +7,7 @@ import { GeminiExplanationPanel } from '@/components/evidence/GeminiExplanationP
 import { TamperEvidentCard } from '@/components/evidence/TamperEvidentCard';
 import { ShareModal } from '@/components/evidence/ShareModal';
 import { EvidenceReportCard } from '@/components/evidence/EvidenceReportCard';
+import { SideBySideComparison } from '@/components/evidence/SideBySideComparison';
 import { StatusBadge } from '@/components/evidence/StatusBadge';
 import { 
   ShieldCheck, 
@@ -19,7 +20,8 @@ import {
   CheckCircle2, 
   AlertTriangle,
   Grid3X3,
-  Scale
+  Scale,
+  GitCompare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -170,7 +172,7 @@ export const AuditDetailPage: React.FC = () => {
 
       {/* Main Evidentiary Tabs Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-muted p-1 rounded-lg w-full sm:w-auto grid grid-cols-4 sm:flex">
+        <TabsList className="bg-muted p-1 rounded-lg w-full sm:w-auto grid grid-cols-5 sm:flex">
           <TabsTrigger value="spatial" className="text-xs font-medium gap-1.5">
             <Layers className="w-3.5 h-3.5 hidden sm:inline" />
             <span>Spatial Viewer</span>
@@ -182,6 +184,10 @@ export const AuditDetailPage: React.FC = () => {
           <TabsTrigger value="reasoning" className="text-xs font-medium gap-1.5">
             <Sparkles className="w-3.5 h-3.5 hidden sm:inline" />
             <span>Gemini Reasoning</span>
+          </TabsTrigger>
+          <TabsTrigger value="comparison" className="text-xs font-medium gap-1.5">
+            <GitCompare className="w-3.5 h-3.5 hidden sm:inline" />
+            <span>Side-by-Side</span>
           </TabsTrigger>
           <TabsTrigger value="security" className="text-xs font-medium gap-1.5">
             <Lock className="w-3.5 h-3.5 hidden sm:inline" />
@@ -218,7 +224,12 @@ export const AuditDetailPage: React.FC = () => {
           />
         </TabsContent>
 
-        {/* Tab 4: Tamper-Evident Cryptographic Seal */}
+        {/* Tab 4: Side-by-Side Lot Comparison */}
+        <TabsContent value="comparison" className="space-y-4 m-0 focus-visible:outline-hidden">
+          <SideBySideComparison currentRecord={record} />
+        </TabsContent>
+
+        {/* Tab 5: Tamper-Evident Cryptographic Seal */}
         <TabsContent value="security" className="space-y-4 m-0 focus-visible:outline-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-7">

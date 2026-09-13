@@ -3,26 +3,29 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import IntersectObserver from '@/components/common/IntersectObserver';
 import { Toaster } from '@/components/ui/sonner';
 import { AppLayout } from '@/components/layouts/AppLayout';
+import { LanguageProvider } from '@/context/LanguageContext';
 import { routes } from './routes';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <IntersectObserver />
-      <Routes>
-        <Route element={<AppLayout />}>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-      <Toaster position="top-right" richColors />
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <IntersectObserver />
+        <Routes>
+          <Route element={<AppLayout />}>
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+        <Toaster position="top-right" richColors />
+      </Router>
+    </LanguageProvider>
   );
 };
 
