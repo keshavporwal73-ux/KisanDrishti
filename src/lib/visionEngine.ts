@@ -6,7 +6,8 @@ import type {
   EvidenceMatrixRow, 
   GeminiExplanation,
   CapturedPhotos,
-  CaptureQualityGateResult
+  CaptureQualityGateResult,
+  CropType
 } from '@/types/evidence';
 import { generateRecordHash } from './crypto';
 
@@ -118,7 +119,7 @@ export function evaluateCaptureQualityGate(
         name: 'Image Sharpness',
         passed: true,
         detail: 'Pericarp edges and surface texture sharply focused.',
-        tip: 'Excellent focus lock on primary grain contours.',
+        tip: 'Excellent focus lock on primary sample contours.',
       },
       shadows: {
         id: 'chk-shadows',
@@ -153,7 +154,7 @@ export function evaluateCaptureQualityGate(
         name: 'Background Separation',
         passed: true,
         detail: 'High optical contrast against neutral background.',
-        tip: 'Clear grain perimeter segmentation possible.',
+        tip: 'Clear sample perimeter segmentation possible.',
       },
       overlap: {
         id: 'chk-overlap',
@@ -173,6 +174,92 @@ export function evaluateCaptureQualityGate(
     failureReasons: [],
     correctiveGuidance: [],
   };
+}
+
+/**
+ * Returns crop-specific morphological and visual metadata.
+ */
+function getCropVisualProfile(crop: CropType) {
+  switch (crop) {
+    case 'Paddy (Rice)':
+      return {
+        unitName: 'grain',
+        unitPlural: 'grains',
+        intactMorphology: 'elongated paddy grain morphology (approx. 3.2 length-to-width ratio)',
+        colorDesc: 'Pearly Translucent / Golden Husk — 93% Optical Uniformity',
+        approxLengthMm: 8.4,
+        cleavageNote: 'Exposed starchy chalky white rice endosperm across transverse fracture',
+        discolorationBaseline: 'normal translucent golden husk baseline',
+        textureType: 'paddy husk and abrasive mechanical de-husking stress',
+      };
+    case 'Mustard':
+      return {
+        unitName: 'seed',
+        unitPlural: 'seeds',
+        intactMorphology: 'spherical brassica seed morphology (approx. 1.8mm diameter)',
+        colorDesc: 'Deep Brown-Black (Melanin) — 90% Optical Uniformity',
+        approxLengthMm: 1.8,
+        cleavageNote: 'Crushed/split brassica seed coat with exposed yellow cotyledon',
+        discolorationBaseline: 'uniform dark melanin seed coat baseline',
+        textureType: 'seed coat rupture and friction abrasion',
+      };
+    case 'Soybean':
+      return {
+        unitName: 'seed',
+        unitPlural: 'seeds',
+        intactMorphology: 'spherical/oval legume seed morphology (approx. 6.2mm diameter)',
+        colorDesc: 'Creamy Pale Yellow (Buff) — 92% Optical Uniformity',
+        approxLengthMm: 6.2,
+        cleavageNote: 'Split cotyledon with fractured seed coat and exposed hilum',
+        discolorationBaseline: 'uniform creamy buff seed coat baseline',
+        textureType: 'mechanical auger friction and surface pericarp bruising',
+      };
+    case 'Maize':
+      return {
+        unitName: 'kernel',
+        unitPlural: 'kernels',
+        intactMorphology: 'dent/flint corn kernel morphology (approx. 9.5mm length)',
+        colorDesc: 'Vibrant Amber / Golden Yellow — 94% Optical Uniformity',
+        approxLengthMm: 9.5,
+        cleavageNote: 'Chipped crown endosperm with exposed vitreous starch',
+        discolorationBaseline: 'vibrant golden yellow baseline',
+        textureType: 'shelling machine abrasion and mechanical impact chipping',
+      };
+    case 'Chana (Chickpea)':
+      return {
+        unitName: 'grain',
+        unitPlural: 'grains',
+        intactMorphology: 'angular beaked chickpea morphology (approx. 7.5mm)',
+        colorDesc: 'Tough Golden Brown / Tan — 91% Optical Uniformity',
+        approxLengthMm: 7.5,
+        cleavageNote: 'Split desi cotyledon with fractured seed beak',
+        discolorationBaseline: 'standard golden-brown tan baseline',
+        textureType: 'mechanical thresher scuffing and seed coat abrasion',
+      };
+    case 'Cotton':
+      return {
+        unitName: 'boll / seed unit',
+        unitPlural: 'units',
+        intactMorphology: 'fibrous lint cluster with embedded fuzzy dark seed',
+        colorDesc: 'Bright White Cellulosic Fiber — 89% Optical Uniformity',
+        approxLengthMm: 22.0,
+        cleavageNote: 'Crushed seed coat contaminating white fiber lint',
+        discolorationBaseline: 'bright white fiber baseline',
+        textureType: 'ginning mechanical friction and trash contamination',
+      };
+    case 'Wheat':
+    default:
+      return {
+        unitName: 'grain',
+        unitPlural: 'grains',
+        intactMorphology: 'standard intact wheat kernel morphology (approx. 2.45 length-to-width ratio)',
+        colorDesc: 'Amber Golden (580nm) — 91% Optical Uniformity',
+        approxLengthMm: 6.8,
+        cleavageNote: 'Transverse fracture with exposed chalky starchy white interior; distal brush missing',
+        discolorationBaseline: 'standard amber-golden baseline',
+        textureType: 'mechanical auger friction and pericarp abrasion',
+      };
+  }
 }
 
 /**
@@ -198,6 +285,7 @@ export async function runHybridVisionAnalysis(
   req: VisionAnalysisRequest
 ): Promise<AuditRecord> {
   const qualityGate = evaluateCaptureQualityGate(req.photos, req.forceQualityFail);
+  const cropProfile = getCropVisualProfile(req.metadata.crop);
 
   // If capture quality gate failed
   if (!qualityGate.passed || req.forceLowConfidence) {
@@ -268,21 +356,14 @@ export async function runHybridVisionAnalysis(
   const absSeed = Math.abs(hashNum);
 
   // Observable visual metrics
-  const brokenPercent = Number((4.5 + (absSeed % 40) / 10).toFixed(1)); // 4.5% to 8.5%
-  const discoloredPercent = Number((1.2 + (absSeed % 20) / 10).toFixed(1)); // 1.2% to 3.2%
+  const brokenPercent = Number((4.2 + (absSeed % 38) / 10).toFixed(1)); // 4.2% to 7.9%
+  const discoloredPercent = Number((1.1 + (absSeed % 20) / 10).toFixed(1)); // 1.1% to 3.1%
   const foreignObjectCount = (absSeed % 3) + 1; // 1 to 3 items
-  const visibleDamagePercent = Number((0.8 + (absSeed % 15) / 10).toFixed(1)); // 0.8% to 2.3%
-  const sampleCoveragePercent = 90 + (absSeed % 8); // 90% to 98%
+  const visibleDamagePercent = Number((0.7 + (absSeed % 14) / 10).toFixed(1)); // 0.7% to 2.1%
+  const sampleCoveragePercent = 91 + (absSeed % 7); // 91% to 98%
   const captureQualityScore = qualityGate.score;
 
-  const approxLength = req.metadata.crop === 'Paddy (Rice)' ? 8.4 : req.metadata.crop === 'Mustard' ? 1.8 : 6.8;
-  const colorDesc = req.metadata.crop === 'Paddy (Rice)' 
-    ? 'Pearly Translucent (Off-white) — 93% Optical Uniformity' 
-    : req.metadata.crop === 'Mustard' 
-    ? 'Deep Brown-Black (Melanin) — 90% Optical Uniformity' 
-    : 'Amber Golden (580nm) — 91% Optical Uniformity';
-
-  const totalObjects = 350 + (absSeed % 120);
+  const totalObjects = 320 + (absSeed % 110);
   const brokenCount = Math.round((brokenPercent / 100) * totalObjects);
   const discoloredCount = Math.round((discoloredPercent / 100) * totalObjects);
   const visibleDamageCount = Math.round((visibleDamagePercent / 100) * totalObjects);
@@ -301,9 +382,9 @@ export async function runHybridVisionAnalysis(
       yPercent: 34.2,
       widthPercent: 4.5,
       heightPercent: 4.8,
-      findingTitle: 'Foreign Material: Inorganic Silica / Stone Fragment',
-      visualEvidence: 'Dark non-biological crystalline fragment (approx. 3.4mm) with high optical density and sharp angular cleavage.',
-      visualReasoning: 'Gemini reasoning: Non-biological reflectance profile. Angular geometric cleavage distinct from natural grain pericarp.',
+      findingTitle: 'Foreign Material: Inorganic Mineral / Stone Fragment',
+      visualEvidence: `Dark non-biological mineral fragment with high optical density and sharp angular cleavage distinct from ${req.metadata.crop}.`,
+      visualReasoning: `Gemini reasoning: Non-biological reflectance profile. Angular geometric cleavage clearly non-cellular compared to ${req.metadata.crop} matrix.`,
       estimatedSizeMm: 3.4,
       isHighPriorityAnomaly: true,
       colorHex: '#DC2626',
@@ -312,17 +393,17 @@ export async function runHybridVisionAnalysis(
     {
       id: 2,
       category: 'broken_grain',
-      categoryLabel: 'Broken / Damaged Grain',
+      categoryLabel: `Broken / Damaged ${req.metadata.crop}`,
       status: 'OBSERVED',
       confidence: 0.96,
       xPercent: 45.2,
       yPercent: 22.4,
       widthPercent: 3.8,
       heightPercent: 3.2,
-      findingTitle: `Broken ${req.metadata.crop}: Transverse Endosperm Cleavage`,
-      visualEvidence: 'Grain truncated at mid-section with exposed chalky starchy white interior. Distal brush missing.',
-      visualReasoning: 'Gemini reasoning: Length-to-width ratio 1.15 vs standard 2.45 for intact grain. High chalk reflectance across fracture line.',
-      estimatedSizeMm: 3.2,
+      findingTitle: `Broken ${req.metadata.crop}: Cleaved Specimen`,
+      visualEvidence: `${req.metadata.crop} sample truncated with ${cropProfile.cleavageNote}.`,
+      visualReasoning: `Gemini reasoning: Aspect ratio diverges from ${cropProfile.intactMorphology}. High specular reflectance from fractured internal tissue.`,
+      estimatedSizeMm: Number((cropProfile.approxLengthMm * 0.55).toFixed(1)),
       isHighPriorityAnomaly: true,
       colorHex: '#D97706',
       photoSource: 'main',
@@ -330,17 +411,17 @@ export async function runHybridVisionAnalysis(
     {
       id: 3,
       category: 'broken_grain',
-      categoryLabel: 'Broken / Damaged Grain',
+      categoryLabel: `Broken / Damaged ${req.metadata.crop}`,
       status: 'OBSERVED',
       confidence: 0.92,
       xPercent: 63.8,
       yPercent: 41.5,
       widthPercent: 3.4,
       heightPercent: 3.0,
-      findingTitle: 'Broken Grain: Sheared Embryo Tip',
-      visualEvidence: 'Germ end sheared off cleanly with exposed sub-aleurone tissue.',
-      visualReasoning: 'Gemini reasoning: Asymmetric contour loss corresponding to mechanical threshing stress.',
-      estimatedSizeMm: 4.1,
+      findingTitle: `Broken ${req.metadata.crop}: Fragmented Tip`,
+      visualEvidence: `Distal tip sheared off cleanly with exposed sub-surface tissue in ${req.metadata.crop} unit.`,
+      visualReasoning: `Gemini reasoning: Asymmetric contour loss corresponding to mechanical threshing/handling stress in ${req.metadata.crop}.`,
+      estimatedSizeMm: Number((cropProfile.approxLengthMm * 0.65).toFixed(1)),
       isHighPriorityAnomaly: true,
       colorHex: '#D97706',
       photoSource: 'closeUp',
@@ -348,17 +429,17 @@ export async function runHybridVisionAnalysis(
     {
       id: 4,
       category: 'discolored_shriveled',
-      categoryLabel: 'Visible Discoloration / Shriveled Kernel',
+      categoryLabel: `Visible Discoloration / Shriveled ${req.metadata.crop}`,
       status: 'OBSERVED',
       confidence: 0.89,
       xPercent: 38.0,
       yPercent: 55.6,
       widthPercent: 3.2,
       heightPercent: 4.5,
-      findingTitle: 'Discolored / Shriveled Kernel',
-      visualEvidence: 'Deep longitudinal wrinkles across pericarp with dull gray-brown hue (L* value 38 vs 62 normal).',
-      visualReasoning: 'Gemini reasoning: Thermal stress / premature desiccation pattern. Surface convolution depth > 0.4mm.',
-      estimatedSizeMm: 4.8,
+      findingTitle: `Discolored / Shriveled ${req.metadata.crop} Candidate`,
+      visualEvidence: `Deep surface wrinkling and dull chromatic shift distinct from ${cropProfile.discolorationBaseline}.`,
+      visualReasoning: `Gemini reasoning: Thermal stress / premature desiccation pattern. Surface convolution depth exceeds baseline for healthy ${req.metadata.crop}.`,
+      estimatedSizeMm: Number((cropProfile.approxLengthMm * 0.8).toFixed(1)),
       isHighPriorityAnomaly: true,
       colorHex: '#C2410C',
       photoSource: 'closeUp',
@@ -373,10 +454,10 @@ export async function runHybridVisionAnalysis(
       yPercent: 78.1,
       widthPercent: 3.6,
       heightPercent: 3.9,
-      findingTitle: 'Physical Surface Abrasion',
-      visualEvidence: 'Surface bruising and pericarp abrasion on outer grain dorsal side.',
-      visualReasoning: 'Gemini reasoning: Abrasive friction marks typical of mechanical auger handling.',
-      estimatedSizeMm: 5.6,
+      findingTitle: `Physical Surface Abrasion on ${req.metadata.crop}`,
+      visualEvidence: `Surface scuffing and friction damage on outer coat corresponding to ${cropProfile.textureType}.`,
+      visualReasoning: `Gemini reasoning: Abrasive friction marks typical of mechanical transit and handling in ${req.metadata.crop}.`,
+      estimatedSizeMm: cropProfile.approxLengthMm,
       isHighPriorityAnomaly: true,
       colorHex: '#B45309',
       photoSource: 'main',
@@ -384,7 +465,7 @@ export async function runHybridVisionAnalysis(
     {
       id: 6,
       category: 'foreign_object',
-      categoryLabel: 'Visible Foreign Material (Weed Seed)',
+      categoryLabel: 'Visible Foreign Material (Adventitious Weed Seed)',
       status: 'OBSERVED',
       confidence: 0.94,
       xPercent: 72.1,
@@ -392,8 +473,8 @@ export async function runHybridVisionAnalysis(
       widthPercent: 3.5,
       heightPercent: 3.8,
       findingTitle: 'Foreign Material: Wild Weed Seed Candidate',
-      visualEvidence: 'Small spherical black botanical seed (approx. 2.1mm) with micro-punctate coat distinct from primary crop.',
-      visualReasoning: 'Gemini reasoning: Spherical aspect ratio (0.95) and melanin pigmentation indicate adventitious botanical weed seed.',
+      visualEvidence: `Small botanical weed seed with distinct coat pigmentation and geometry contrasting with ${req.metadata.crop}.`,
+      visualReasoning: `Gemini reasoning: Aspect ratio and pigmentation confirm adventitious botanical weed seed admixture in ${req.metadata.crop} sample.`,
       estimatedSizeMm: 2.1,
       isHighPriorityAnomaly: true,
       colorHex: '#DC2626',
@@ -409,10 +490,10 @@ export async function runHybridVisionAnalysis(
       yPercent: 67.4,
       widthPercent: 3.1,
       heightPercent: 3.4,
-      findingTitle: 'Abnormal Surface Cavity / Possible Insect Bore',
-      visualEvidence: 'Circular aperture (approx. 0.8mm) with dark internal shadowing on lateral flank.',
-      visualReasoning: 'Gemini reasoning: Optical shadowing indicates 2D cavity. Requires physical manual probe for internal confirmation.',
-      estimatedSizeMm: 5.2,
+      findingTitle: `Abnormal Appearance on ${req.metadata.crop}: Cavity Aperture`,
+      visualEvidence: `Circular aperture (approx. 0.8mm) with dark optical shadowing on ${req.metadata.crop} lateral flank.`,
+      visualReasoning: `Gemini reasoning: Optical shadowing indicates 2D cavity in ${req.metadata.crop}. Requires manual probe for internal verification.`,
+      estimatedSizeMm: cropProfile.approxLengthMm,
       isHighPriorityAnomaly: true,
       colorHex: '#B45309',
       photoSource: 'main',
@@ -425,11 +506,11 @@ export async function runHybridVisionAnalysis(
       id: 'mat-1',
       parameter: 'Broken / Damaged Material',
       categoryGroup: 'OBSERVED VISUAL EVIDENCE',
-      result: `${brokenPercent}% (${brokenCount} items)`,
+      result: `${brokenPercent}% (${brokenCount} ${cropProfile.unitPlural})`,
       status: 'OBSERVED',
       method: '2D Pixel Geometry & Cleavage Contour Analysis',
       confidence: 'High',
-      note: 'Grains exhibiting cleaved endosperm or sheared germ ends visible in captured photos.',
+      note: `${req.metadata.crop} units exhibiting cleaved contours or sheared tips visible in captured photos.`,
     },
     {
       id: 'mat-2',
@@ -439,27 +520,27 @@ export async function runHybridVisionAnalysis(
       status: 'OBSERVED',
       method: 'Spectral & Geometric Contrast Differential',
       confidence: 'High',
-      note: 'Inorganic stone fragment and weed seed identified with non-grain reflectance profile.',
+      note: `Inorganic mineral fragment and adventitious weed seed identified with non-${req.metadata.crop} reflectance profile.`,
     },
     {
       id: 'mat-3',
       parameter: 'Visible Discoloration',
       categoryGroup: 'OBSERVED VISUAL EVIDENCE',
-      result: `${discoloredPercent}% (${discoloredCount} items)`,
+      result: `${discoloredPercent}% (${discoloredCount} ${cropProfile.unitPlural})`,
       status: 'OBSERVED',
-      method: 'Pericarp Chromatic Dispersion',
+      method: 'Chromatic Dispersion Analysis',
       confidence: 'High',
-      note: 'Shriveled and dull gray-brown kernels distinct from standard golden baseline.',
+      note: `Shriveled and dull ${req.metadata.crop} specimens distinct from ${cropProfile.discolorationBaseline}.`,
     },
     {
       id: 'mat-4',
       parameter: 'Physical Surface Damage',
       categoryGroup: 'OBSERVED VISUAL EVIDENCE',
-      result: `${visibleDamagePercent}% (${visibleDamageCount} items)`,
+      result: `${visibleDamagePercent}% (${visibleDamageCount} ${cropProfile.unitPlural})`,
       status: 'OBSERVED',
       method: 'Surface Texture & Abrasion Detection',
       confidence: 'Medium',
-      note: 'Dorsal abrasions and mechanical friction marks on grain pericarp.',
+      note: `Abrasions and mechanical friction marks corresponding to ${cropProfile.textureType}.`,
     },
     {
       id: 'mat-5',
@@ -469,7 +550,7 @@ export async function runHybridVisionAnalysis(
       status: 'POSSIBLE',
       method: '2D Aperture Shadowing',
       confidence: 'Medium',
-      note: 'Surface bore aperture visible; internal verification requires manual inspection.',
+      note: 'Surface bore aperture visible; internal verification requires physical inspection.',
     },
     {
       id: 'mat-6',
@@ -491,17 +572,17 @@ export async function runHybridVisionAnalysis(
       status: 'UNVERIFIED',
       method: 'N/A — Not Accessible via Smartphone Photography',
       confidence: 'N/A',
-      note: 'KisanDrishti does not test chemical moisture. Do not infer moisture from visual color alone.',
+      note: `KisanDrishti does not test chemical moisture for ${req.metadata.crop}. Do not infer moisture from visual appearance alone.`,
     },
     {
       id: 'mat-unver-2',
-      parameter: 'Protein / Gluten Content',
+      parameter: 'Protein / Oil / Chemical Composition',
       categoryGroup: 'UNVERIFIED LABORATORY MEASUREMENTS',
-      result: 'Not tested (Requires NIR spectrometer or Kjeldahl chemical titration)',
+      result: 'Not tested (Requires NIR spectrometer or chemical titration)',
       status: 'UNVERIFIED',
       method: 'N/A — Requires Laboratory Equipment',
       confidence: 'N/A',
-      note: 'Biochemical protein cannot be derived from 2D smartphone images.',
+      note: `Biochemical composition of ${req.metadata.crop} cannot be derived from 2D smartphone images.`,
     },
     {
       id: 'mat-unver-3',
@@ -515,7 +596,7 @@ export async function runHybridVisionAnalysis(
     },
     {
       id: 'mat-unver-4',
-      parameter: 'Internal Kernel Defects',
+      parameter: 'Internal Defects / Larvae',
       categoryGroup: 'UNVERIFIED LABORATORY MEASUREMENTS',
       result: 'Not verified (Requires X-ray or destructive slicing)',
       status: 'UNVERIFIED',
@@ -525,16 +606,6 @@ export async function runHybridVisionAnalysis(
     },
     {
       id: 'mat-unver-5',
-      parameter: 'Nutritional Values / Oil Content',
-      categoryGroup: 'UNVERIFIED LABORATORY MEASUREMENTS',
-      result: 'Not tested (Requires solvent extraction)',
-      status: 'UNVERIFIED',
-      method: 'N/A',
-      confidence: 'N/A',
-      note: 'Nutritional content is outside the scope of optical visual evidence.',
-    },
-    {
-      id: 'mat-unver-6',
       parameter: 'Final Price / Rupee Deduction',
       categoryGroup: 'UNVERIFIED LABORATORY MEASUREMENTS',
       result: 'NOT CALCULATED (KisanDrishti does not decide value)',
@@ -547,33 +618,33 @@ export async function runHybridVisionAnalysis(
 
   const explanations: GeminiExplanation[] = [
     {
-      finding: 'Foreign Material: Inorganic Silica Fragment (#1)',
-      visualEvidence: 'Non-grain angular dark silhouette at coordinates (28.5%, 34.2%). Zero agreement with biological seed pericarp geometry.',
-      visualReasoning: 'High optical density with sharp cleavage planes. Pixel intensity variance across RGB channels indicates non-organic crystalline mineral matter.',
+      finding: `Foreign Material: Inorganic Mineral Fragment (#1)`,
+      visualEvidence: `Non-biological angular dark silhouette at coordinates (28.5%, 34.2%) contrasting with ${req.metadata.crop}.`,
+      visualReasoning: `High optical density with sharp cleavage planes. Pixel intensity variance across RGB channels indicates non-organic crystalline mineral matter distinct from ${req.metadata.crop}.`,
       status: 'OBSERVED VISUAL EVIDENCE',
       limitation: 'Identifies surface foreign object in the captured sample only. Does not quantify total bulk foreign matter by weight across the entire truckload.',
       markerId: 1,
     },
     {
-      finding: 'Transverse Endosperm Cleavage in Broken Grain (#2)',
-      visualEvidence: 'Truncated grain contour with exposed white starchy endosperm at coordinates (45.2%, 22.4%). Distal brush end missing.',
-      visualReasoning: 'Length-to-width ratio of 1.15 is significantly below standard intact wheat kernel morphology (2.45). High specular reflectance from fractured starch granules.',
+      finding: `Cleaved Fragment in Broken ${req.metadata.crop} (#2)`,
+      visualEvidence: `Truncated ${req.metadata.crop} unit with ${cropProfile.cleavageNote} at coordinates (45.2%, 22.4%).`,
+      visualReasoning: `Morphology diverges from ${cropProfile.intactMorphology}. High specular reflectance from fractured internal tissue.`,
       status: 'OBSERVED VISUAL EVIDENCE',
-      limitation: 'Describes observable 2D surface fragmentation. Does not measure internal micro-fissuring.',
+      limitation: `Describes observable 2D surface fragmentation of ${req.metadata.crop}. Does not measure internal micro-fissuring.`,
       markerId: 2,
     },
     {
-      finding: 'Visible Discoloration & Thermal Desiccation (#4)',
-      visualEvidence: 'Deep longitudinal wrinkles and dull gray-brown hue at coordinates (38.0%, 55.6%).',
-      visualReasoning: 'L* luminosity value is 38 (normal baseline 62). Wrinkle convolution frequency indicates thermal stress during maturation.',
+      finding: `Visible Discoloration & Thermal Desiccation in ${req.metadata.crop} (#4)`,
+      visualEvidence: `Surface wrinkling and chromatic deviation from ${cropProfile.discolorationBaseline} at coordinates (38.0%, 55.6%).`,
+      visualReasoning: `Luminosity and chromatic profile confirm thermal stress during maturation of this ${req.metadata.crop} specimen.`,
       status: 'OBSERVED VISUAL EVIDENCE',
-      limitation: 'Visual discoloration only. Does not measure grain hardness or baking quality.',
+      limitation: `Visual discoloration only. Does not measure internal ${req.metadata.crop} biochemical hardness or grade quality.`,
       markerId: 4,
     },
     {
-      finding: 'Abnormal Appearance: Possible Bore Aperture (#7)',
-      visualEvidence: 'Circular dark aperture (approx. 0.8mm) with internal shadowing at coordinates (18.2%, 67.4%).',
-      visualReasoning: '2D optical shadow suggests cavity depth. Classified as POSSIBLE because external optics cannot verify if cavity penetrates the full endosperm without destructive slicing.',
+      finding: `Abnormal Appearance on ${req.metadata.crop}: Possible Bore Cavity (#7)`,
+      visualEvidence: `Circular dark aperture (approx. 0.8mm) with internal shadowing at coordinates (18.2%, 67.4%).`,
+      visualReasoning: `2D optical shadow suggests cavity depth. Classified as POSSIBLE because external optics cannot verify if cavity penetrates the full interior without destructive inspection.`,
       status: 'POSSIBLE INTERPRETATION',
       limitation: 'Requires manual probe or physical inspection to confirm whether active larvae exist inside.',
       markerId: 7,
@@ -592,8 +663,8 @@ export async function runHybridVisionAnalysis(
     abnormalAppearanceCount: 1,
     sampleCoveragePercent,
     captureQualityScore,
-    approximateAverageLengthMm: approxLength,
-    opticalColorDistribution: colorDesc,
+    approximateAverageLengthMm: cropProfile.approxLengthMm,
+    opticalColorDistribution: cropProfile.colorDesc,
     totalObjects,
     totalFlaggedObservations: detections.length,
     soundGrainRatePercent: soundRate,

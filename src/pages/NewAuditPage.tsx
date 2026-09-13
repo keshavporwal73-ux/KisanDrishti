@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,7 +24,8 @@ import {
   Sun,
   Maximize2,
   X,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Image as ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -68,11 +69,64 @@ type FormValues = {
   hasOptionalSheetUsed: boolean;
 };
 
-// High-resolution realistic fallback sample images for quick testing
-const PHOTO_PRESETS = {
-  main: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1200&q=80',
-  closeUp: 'https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=80',
-  context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+// High-resolution realistic fallback sample images tailored per crop
+const CROP_PHOTO_PRESETS: Record<CropType, { main: string; closeUp: string; context: string; variety: string; location: string }> = {
+  'Wheat': {
+    main: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'HD-3086 (Pusa Gautami)',
+    location: 'Khanna Mandi, Punjab',
+  },
+  'Paddy (Rice)': {
+    main: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'Basmati PB-1121',
+    location: 'Karnal Grain Market, Haryana',
+  },
+  'Mustard': {
+    main: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'Pusa Bold / Pioneer 45S46',
+    location: 'Alwar Mandi, Rajasthan',
+  },
+  'Soybean': {
+    main: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'JS-9560 / JS-335',
+    location: 'Indore Mandi, Madhya Pradesh',
+  },
+  'Maize': {
+    main: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'HQPM-1 Yellow Dent',
+    location: 'Davangere APMC, Karnataka',
+  },
+  'Chana (Chickpea)': {
+    main: 'https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'Desi JG-11 / Vishal',
+    location: 'Gulbarga APMC, Karnataka',
+  },
+  'Cotton': {
+    main: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'Bt Cotton Hybrid Shankar-6',
+    location: 'Rajkot Mandi, Gujarat',
+  },
+  'Other': {
+    main: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1200&q=80',
+    closeUp: 'https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=80',
+    context: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    variety: 'Commercial Lot Grade A',
+    location: 'Central Agricultural Mandi',
+  },
 };
 
 export const NewAuditPage: React.FC = () => {
@@ -92,7 +146,10 @@ export const NewAuditPage: React.FC = () => {
     context: '',
   });
 
-  // Active photo tab in capture screen
+  // Track if user explicitly provided custom photos vs presets
+  const [hasCustomPhotos, setHasCustomPhotos] = useState(false);
+
+  // Active photo slot in capture screen
   const [activePhotoSlot, setActivePhotoSlot] = useState<'main' | 'closeUp' | 'context'>('main');
 
   // Camera stream & controls
@@ -120,8 +177,24 @@ export const NewAuditPage: React.FC = () => {
     },
   });
 
-  const selectedCrop = watch('crop');
+  const selectedCrop = watch('crop') as CropType;
   const hasOptionalSheet = watch('hasOptionalSheetUsed');
+
+  // Update variety and location suggestions when crop changes
+  useEffect(() => {
+    const preset = CROP_PHOTO_PRESETS[selectedCrop] || CROP_PHOTO_PRESETS.Wheat;
+    setValue('variety', preset.variety);
+    setValue('location', preset.location);
+
+    // If user hasn't uploaded custom photos, prefill the crop-specific presets
+    if (!hasCustomPhotos) {
+      setPhotos({
+        main: preset.main,
+        closeUp: preset.closeUp,
+        context: preset.context,
+      });
+    }
+  }, [selectedCrop, setValue, hasCustomPhotos]);
 
   // Start Camera
   const startCamera = async (facing: 'environment' | 'user' = cameraFacing) => {
@@ -183,6 +256,7 @@ export const NewAuditPage: React.FC = () => {
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
       const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       
+      setHasCustomPhotos(true);
       setPhotos(prev => ({
         ...prev,
         [activePhotoSlot]: dataUrl,
@@ -204,6 +278,7 @@ export const NewAuditPage: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
+          setHasCustomPhotos(true);
           setPhotos(prev => ({
             ...prev,
             [activePhotoSlot]: event.target?.result as string,
@@ -220,9 +295,15 @@ export const NewAuditPage: React.FC = () => {
     }
   };
 
-  // Use Preset Demo Photos
-  const loadPresetPhotos = () => {
-    setPhotos(PHOTO_PRESETS);
+  // Load Crop-Specific Preset Photos
+  const loadCropPresetPhotos = () => {
+    const preset = CROP_PHOTO_PRESETS[selectedCrop] || CROP_PHOTO_PRESETS.Wheat;
+    setPhotos({
+      main: preset.main,
+      closeUp: preset.closeUp,
+      context: preset.context,
+    });
+    setHasCustomPhotos(false);
     stopCamera();
   };
 
@@ -236,18 +317,20 @@ export const NewAuditPage: React.FC = () => {
 
   // Form submit -> Run Capture Quality Gate and Analysis
   const onFormSubmit = async (values: FormValues) => {
+    const currentCropPresets = CROP_PHOTO_PRESETS[values.crop] || CROP_PHOTO_PRESETS.Wheat;
+    
     // Ensure at least main and close-up photos exist (context is optional)
     const effectivePhotos: CapturedPhotos = {
-      main: photos.main || PHOTO_PRESETS.main,
-      closeUp: photos.closeUp || PHOTO_PRESETS.closeUp,
-      context: photos.context || undefined,
+      main: photos.main || currentCropPresets.main,
+      closeUp: photos.closeUp || currentCropPresets.closeUp,
+      context: photos.context || currentCropPresets.context,
     };
 
     stopCamera();
     setCurrentStep(4);
     setIsAnalyzing(true);
     setAnalysisProgress(10);
-    setAnalysisStageText('Running 8-Parameter Capture Quality Gate (Sharpness, Shadows, Lighting, Framing)...');
+    setAnalysisStageText(`Running 8-Parameter Capture Quality Gate for ${values.crop}...`);
 
     // Evaluate quality gate
     const gateResult = evaluateCaptureQualityGate(effectivePhotos, simulateQualityFailure);
@@ -263,10 +346,10 @@ export const NewAuditPage: React.FC = () => {
         return;
       }
 
-      setAnalysisStageText('Local CV: Segmenting sample contours & candidate anomaly localization...');
+      setAnalysisStageText(`Local CV: Segmenting ${values.crop} contours & localizing candidate anomalies...`);
       setTimeout(() => {
         setAnalysisProgress(65);
-        setAnalysisStageText('Gemini Multimodal: Reasoning observable features (Broken, Discoloration, Foreign Objects)...');
+        setAnalysisStageText(`Gemini Multimodal: Reasoning observable features for ${values.crop}...`);
         setTimeout(() => {
           setAnalysisProgress(88);
           setAnalysisStageText('Cryptographic Engine: Generating SHA-256 Tamper-Evident Evidence Seal...');
@@ -296,7 +379,8 @@ export const NewAuditPage: React.FC = () => {
             });
 
             await saveAuditRecord(record);
-            navigate(`/audits/${record.id}`);
+            // Navigate directly to the newly generated evidence record
+            navigate(`/records/${record.id}`);
           }, 600);
         }, 800);
       }, 800);
@@ -318,99 +402,45 @@ export const NewAuditPage: React.FC = () => {
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5">
-            Evidence Before Valuation • Smartphone Visual Evidence Protocol
+            Standardized smartphone visual record for agricultural trade • "Evidence Before Valuation"
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-[11px] font-mono bg-stone-100 dark:bg-stone-900 border-stone-300">
-            Step {currentStep} of 4
-          </Badge>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/audits')} className="text-xs">
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            Back to Records
-          </Button>
+        {/* Step Indicator */}
+        <div className="flex items-center gap-1.5 text-xs font-mono bg-muted/60 px-3 py-1.5 rounded-lg border border-border">
+          <span className="text-muted-foreground">Step</span>
+          <span className="font-bold text-emerald-600">{currentStep}</span>
+          <span className="text-muted-foreground">of 3</span>
         </div>
       </div>
 
-      {/* Progress Steps Header */}
-      <div className="grid grid-cols-3 gap-2 text-xs">
-        <div 
-          onClick={() => currentStep > 1 && setCurrentStep(1)}
-          className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
-            currentStep === 1 
-              ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs' 
-              : currentStep > 1 
-              ? 'border-emerald-600/40 bg-emerald-500/5 text-emerald-800 dark:text-emerald-300' 
-              : 'border-border text-muted-foreground opacity-60'
-          }`}
-        >
-          <span className="block font-mono text-[10px]">STEP 1</span>
-          <span>1. Lot Metadata</span>
-        </div>
-
-        <div 
-          onClick={() => currentStep > 2 && setCurrentStep(2)}
-          className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
-            currentStep === 2 
-              ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs' 
-              : currentStep > 2 
-              ? 'border-emerald-600/40 bg-emerald-500/5 text-emerald-800 dark:text-emerald-300' 
-              : 'border-border text-muted-foreground opacity-60'
-          }`}
-        >
-          <span className="block font-mono text-[10px]">STEP 2</span>
-          <span>2. Simple Guidelines</span>
-        </div>
-
-        <div 
-          onClick={() => currentStep > 3 && setCurrentStep(3)}
-          className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
-            currentStep === 3 
-              ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs' 
-              : currentStep > 3 
-              ? 'border-emerald-600/40 bg-emerald-500/5 text-emerald-800 dark:text-emerald-300' 
-              : 'border-border text-muted-foreground opacity-60'
-          }`}
-        >
-          <span className="block font-mono text-[10px]">STEP 3</span>
-          <span>3. 2–3 Smartphone Photos</span>
-        </div>
-      </div>
-
-      {/* STEP 1: LOT METADATA FORM */}
+      {/* STEP 1: SELECT CROP & ENTER LOT DETAILS */}
       {currentStep === 1 && (
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="bg-muted/30 pb-4 border-b border-border">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-base font-bold flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary" />
-                  Produce & Lot Information
-                </CardTitle>
-                <CardDescription className="text-xs mt-1">
-                  Enter basic identifiers for the agricultural lot before capturing visual evidence.
-                </CardDescription>
-              </div>
-              <Badge variant="secondary" className="text-[10px] font-mono">
-                Zero Hardware Required
-              </Badge>
-            </div>
+        <Card className="border border-border shadow-sm">
+          <CardHeader className="pb-4 border-b border-border bg-card">
+            <CardTitle className="text-base font-bold font-serif text-foreground">
+              Step 1: Select Commodity & Lot Identification
+            </CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">
+              Enter the agricultural commodity, lot number, and mandi location for this inspection record.
+            </CardDescription>
           </CardHeader>
 
-          <CardContent className="pt-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Crop Type */}
-              <div className="space-y-1.5">
-                <Label htmlFor="crop" className="text-xs font-semibold">
-                  Crop / Commodity <span className="text-red-500">*</span>
+          <CardContent className="pt-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              
+              {/* Crop Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="crop" className="text-xs font-semibold flex items-center justify-between">
+                  <span>Select Crop / Commodity *</span>
+                  <span className="text-[10px] text-muted-foreground font-normal">Required</span>
                 </Label>
                 <Select
                   value={selectedCrop}
-                  onValueChange={(val) => setValue('crop', val as CropType)}
+                  onValueChange={(val: CropType) => setValue('crop', val)}
                 >
-                  <SelectTrigger id="crop" className="text-xs">
-                    <SelectValue placeholder="Select Crop" />
+                  <SelectTrigger id="crop" className="text-xs h-9 bg-card">
+                    <SelectValue placeholder="Choose commodity" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Wheat">Wheat (Kanak / Gehun)</SelectItem>
@@ -418,434 +448,458 @@ export const NewAuditPage: React.FC = () => {
                     <SelectItem value="Mustard">Mustard (Sarson / Rai)</SelectItem>
                     <SelectItem value="Soybean">Soybean</SelectItem>
                     <SelectItem value="Maize">Maize (Makka)</SelectItem>
-                    <SelectItem value="Chana (Chickpea)">Chana (Bengal Gram)</SelectItem>
+                    <SelectItem value="Chana (Chickpea)">Chana (Gram / Chickpea)</SelectItem>
                     <SelectItem value="Cotton">Cotton (Kapas)</SelectItem>
                     <SelectItem value="Other">Other Agricultural Commodity</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.crop && <p className="text-[11px] text-destructive">{errors.crop.message}</p>}
               </div>
 
-              {/* Lot Identifier */}
-              <div className="space-y-1.5">
-                <Label htmlFor="lotId" className="text-xs font-semibold">
-                  Lot / Trolley Identifier <span className="text-red-500">*</span>
+              {/* Lot ID */}
+              <div className="space-y-2">
+                <Label htmlFor="lotId" className="text-xs font-semibold flex items-center justify-between">
+                  <span>Lot / Bag Reference Identifier *</span>
+                  <span className="text-[10px] text-muted-foreground font-normal">e.g. LOT-4029</span>
                 </Label>
                 <Input
                   id="lotId"
-                  placeholder="e.g. LOT-2026-0891 or Trolley #12"
-                  className="text-xs font-mono"
                   {...register('lotId')}
+                  placeholder="e.g. LOT-WHEAT-2026-08"
+                  className="text-xs h-9 font-mono bg-card"
                 />
-                {errors.lotId && (
-                  <p className="text-[11px] text-red-500">{errors.lotId.message}</p>
-                )}
+                {errors.lotId && <p className="text-[11px] text-destructive">{errors.lotId.message}</p>}
               </div>
 
-              {/* Location / Mandi */}
-              <div className="space-y-1.5">
-                <Label htmlFor="location" className="text-xs font-semibold">
-                  Location / Mandi Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="location"
-                  placeholder="e.g. Khanna Grain Mandi, Punjab"
-                  className="text-xs"
-                  {...register('location')}
-                />
-                {errors.location && (
-                  <p className="text-[11px] text-red-500">{errors.location.message}</p>
-                )}
-              </div>
-
-              {/* Variety (Optional) */}
-              <div className="space-y-1.5">
+              {/* Variety */}
+              <div className="space-y-2">
                 <Label htmlFor="variety" className="text-xs font-semibold">
-                  Variety / Cultivar <span className="text-muted-foreground font-normal">(Optional)</span>
+                  Crop Variety / Seed Name (Optional)
                 </Label>
                 <Input
                   id="variety"
-                  placeholder="e.g. HD-3086, PBW-550, Basmati 1509"
-                  className="text-xs"
                   {...register('variety')}
+                  placeholder="e.g. PB-1121, HD-3086, Pioneer"
+                  className="text-xs h-9 bg-card"
                 />
               </div>
 
-              {/* Buyer / Transaction Ref (Optional) */}
-              <div className="space-y-1.5">
+              {/* Mandi / Location */}
+              <div className="space-y-2">
+                <Label htmlFor="location" className="text-xs font-semibold flex items-center justify-between">
+                  <span>Mandi Yard / Farm Location *</span>
+                  <span className="text-[10px] text-muted-foreground font-normal">Required</span>
+                </Label>
+                <Input
+                  id="location"
+                  {...register('location')}
+                  placeholder="e.g. Khanna Mandi, Punjab"
+                  className="text-xs h-9 bg-card"
+                />
+                {errors.location && <p className="text-[11px] text-destructive">{errors.location.message}</p>}
+              </div>
+
+              {/* Buyer / Aggregator Reference */}
+              <div className="space-y-2">
                 <Label htmlFor="buyerRef" className="text-xs font-semibold">
-                  Buyer / Trader Reference <span className="text-muted-foreground font-normal">(Optional)</span>
+                  Buyer / Trader Ref / Gate Pass # (Optional)
                 </Label>
                 <Input
                   id="buyerRef"
-                  placeholder="e.g. Traders Union, Aggarwal Mills, APMC Yard"
-                  className="text-xs"
                   {...register('buyerRef')}
+                  placeholder="e.g. Trader Arhtiya Ref #89"
+                  className="text-xs h-9 bg-card"
                 />
               </div>
 
-              {/* Sample Grab Description */}
-              <div className="space-y-1.5">
+              {/* Sample Description */}
+              <div className="space-y-2">
                 <Label htmlFor="sampleDescription" className="text-xs font-semibold">
-                  Sample Selection Method <span className="text-muted-foreground font-normal">(Optional)</span>
+                  Sample Description (Optional)
                 </Label>
                 <Input
                   id="sampleDescription"
-                  placeholder="e.g. Random grab sample from top and center bags"
-                  className="text-xs"
                   {...register('sampleDescription')}
+                  placeholder="e.g. Composite grab sample from top/middle of 20 bags"
+                  className="text-xs h-9 bg-card"
                 />
               </div>
             </div>
 
-            {/* Optional Printed Sheet Toggle */}
-            <div className="p-3 rounded-lg border border-border bg-stone-50 dark:bg-stone-900/40 flex items-center justify-between gap-4">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-foreground">Using Optional Alignment Sheet?</span>
-                  <Badge variant="outline" className="text-[9px] border-stone-300">Strictly Optional</Badge>
+            {/* Optional Alignment Sheet Switch */}
+            <div className="p-4 rounded-xl border border-border bg-stone-50 dark:bg-stone-900/40 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                    <Smartphone className="w-3.5 h-3.5 text-emerald-600" />
+                    Did you place the sample on an optional printed alignment sheet?
+                  </span>
+                  <p className="text-[11px] text-muted-foreground">
+                    Strictly optional. An inexpensive standard A4 printout helps camera framing and color reference.
+                  </p>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  An ordinary A4 printed paper sheet helps camera framing and color reference. It is NOT required.
-                </p>
-              </div>
-              <Switch
-                checked={hasOptionalSheet}
-                onCheckedChange={(val) => setValue('hasOptionalSheetUsed', val)}
-              />
-            </div>
-
-            {/* Core Principle Callout */}
-            <div className="p-3 rounded-lg border border-emerald-600/20 bg-emerald-500/5 text-[11px] text-stone-700 dark:text-stone-300 flex items-start gap-2.5">
-              <Info className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-emerald-800 dark:text-emerald-300 block">
-                  KisanDrishti Protocol Ground:
-                </span>
-                <span>
-                  "Don't tell both sides what the crop is worth. Give both sides the same visual evidence to inspect."
-                </span>
+                <Switch
+                  checked={hasOptionalSheet}
+                  onCheckedChange={(val) => setValue('hasOptionalSheetUsed', val)}
+                />
               </div>
             </div>
           </CardContent>
 
-          <CardFooter className="bg-muted/20 border-t border-border flex justify-between">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/audits')} className="text-xs">
-              Cancel
-            </Button>
-            <Button size="sm" onClick={() => setCurrentStep(2)} className="text-xs gap-1">
-              <span>Next: Simple Capture Guidelines</span>
+          <CardFooter className="bg-muted/20 border-t border-border flex justify-end p-4">
+            <Button
+              size="sm"
+              onClick={() => setCurrentStep(2)}
+              className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white gap-1.5"
+            >
+              <span>Continue to Capture Guidelines</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Button>
           </CardFooter>
         </Card>
       )}
 
-      {/* STEP 2: SIMPLE CAPTURE GUIDELINES */}
+      {/* STEP 2: SIMPLE CAPTURE INSTRUCTIONS */}
       {currentStep === 2 && (
-        <Card className="border border-border shadow-xs">
-          <CardHeader className="bg-muted/30 pb-4 border-b border-border">
+        <Card className="border border-border shadow-sm">
+          <CardHeader className="pb-4 border-b border-border bg-card">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-bold flex items-center gap-2">
-                  <Smartphone className="w-4 h-4 text-primary" />
-                  Simple Smartphone Capture Guidelines
+                <CardTitle className="text-base font-bold font-serif text-foreground">
+                  Step 2: Simple Photo Capture Guidelines
                 </CardTitle>
-                <CardDescription className="text-xs mt-1">
-                  Follow these 3 simple field instructions to ensure your photos pass the quality gate.
+                <CardDescription className="text-xs text-muted-foreground">
+                  Follow these 3 easy rules to ensure your photos pass the Capture Quality Gate.
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="text-[10px] font-mono border-emerald-600 text-emerald-700 dark:text-emerald-400">
-                Ordinary Phone
+              <Badge variant="outline" className="text-[10px] font-mono border-emerald-600 text-emerald-700">
+                No Special Hardware Required
               </Badge>
             </div>
           </CardHeader>
 
-          <CardContent className="pt-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* Guideline 1 */}
-              <div className="p-4 rounded-xl border border-border bg-card space-y-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono font-bold text-sm flex items-center justify-center">
+          <CardContent className="pt-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Instruction 1: Representative Sampling */}
+              <div className="p-4 rounded-xl border border-emerald-600/30 bg-emerald-500/5 space-y-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">
                   1
                 </div>
-                <h4 className="font-bold text-xs text-foreground">Representative Sample</h4>
+                <h3 className="font-bold text-xs text-foreground">
+                  Representative Sample
+                </h3>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Take a typical portion of the lot. <strong>Do not</strong> intentionally pick only the cleanest or worst grains.
+                  Take a natural grab sample from across the lot or bags. <strong>Do NOT intentionally pick only the cleanest or worst material.</strong>
                 </p>
               </div>
 
-              {/* Guideline 2 */}
-              <div className="p-4 rounded-xl border border-border bg-card space-y-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono font-bold text-sm flex items-center justify-center">
+              {/* Instruction 2: Clean Surface */}
+              <div className="p-4 rounded-xl border border-emerald-600/30 bg-emerald-500/5 space-y-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">
                   2
                 </div>
-                <h4 className="font-bold text-xs text-foreground">Clean, Visible Surface</h4>
+                <h3 className="font-bold text-xs text-foreground">
+                  Clean, Visible Surface
+                </h3>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Spread sample evenly on any clean, non-reflective, flat surface. <strong>Do not arrange or count grains individually.</strong>
+                  Place the sample on a clean sheet of paper, tray, or table. Spread it out naturally. <strong>Do NOT individually arrange or count grains.</strong>
                 </p>
               </div>
 
-              {/* Guideline 3 */}
-              <div className="p-4 rounded-xl border border-border bg-card space-y-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono font-bold text-sm flex items-center justify-center">
+              {/* Instruction 3: Good Light & 2-3 Photos */}
+              <div className="p-4 rounded-xl border border-emerald-600/30 bg-emerald-500/5 space-y-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">
                   3
                 </div>
-                <h4 className="font-bold text-xs text-foreground">Natural Lighting</h4>
+                <h3 className="font-bold text-xs text-foreground">
+                  Take 2–3 Smartphone Photos
+                </h3>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Use bright indirect daytime light. Avoid harsh flash glare and ensure your body does not cast a dark shadow over the sample.
+                  Capture 1 <strong>Main Overview</strong>, 1 <strong>Close-Up</strong>, and optionally 1 <strong>Wider Context</strong> photo in daylight without harsh shadows.
                 </p>
               </div>
             </div>
 
-            {/* Photo Plan Breakdown */}
-            <div className="p-4 rounded-xl border border-border bg-stone-50 dark:bg-stone-900/60 space-y-2">
-              <span className="font-bold text-xs text-foreground block">
-                Required Photo Plan (2–3 Photos):
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-                <div className="p-2.5 rounded bg-background border border-border">
-                  <span className="font-semibold text-primary block">Photo 1: Main Sample</span>
-                  <span className="text-muted-foreground">Overall view from approx. 20–30 cm above.</span>
-                </div>
-                <div className="p-2.5 rounded bg-background border border-border">
-                  <span className="font-semibold text-primary block">Photo 2: Close-up Photo</span>
-                  <span className="text-muted-foreground">Macro focus from approx. 10–15 cm for grain details.</span>
-                </div>
-                <div className="p-2.5 rounded bg-background border border-border">
-                  <span className="font-semibold text-stone-600 dark:text-stone-300 block">Photo 3: Wider Context (Optional)</span>
-                  <span className="text-muted-foreground">Shows the surrounding lot/trolley environment.</span>
-                </div>
+            {/* Quality Gate Rule Callout */}
+            <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs space-y-1.5 text-amber-950 dark:text-amber-200">
+              <div className="flex items-center gap-2 font-bold text-amber-900 dark:text-amber-300">
+                <ShieldAlert className="w-4 h-4 text-amber-600" />
+                <span>Automated Capture Quality Gate Notice:</span>
               </div>
-            </div>
-
-            {/* Representativeness Limitation Box */}
-            <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 text-[11px] text-amber-900 dark:text-amber-200">
-              <span className="font-semibold block mb-0.5">Mandatory Representativeness Notice:</span>
-              <span>
-                "This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot."
-              </span>
+              <p className="text-[11px] leading-relaxed">
+                KisanDrishti will automatically inspect your photos for <strong>blur, shadows, lighting, glare, framing, visibility, and resolution</strong>. If quality is insufficient, the system will not guess or generate false data; it will ask you to recapture the sample.
+              </p>
             </div>
           </CardContent>
 
-          <CardFooter className="bg-muted/20 border-t border-border flex justify-between">
+          <CardFooter className="bg-muted/20 border-t border-border flex justify-between p-4">
             <Button variant="ghost" size="sm" onClick={() => setCurrentStep(1)} className="text-xs">
               <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-              Back
+              Back to Details
             </Button>
-            <Button size="sm" onClick={() => setCurrentStep(3)} className="text-xs gap-1">
-              <span>Next: Take 2–3 Photos</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+            <Button
+              size="sm"
+              onClick={() => {
+                setCurrentStep(3);
+                startCamera();
+              }}
+              className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white gap-1.5"
+            >
+              <span>Proceed to Photo Capture</span>
+              <Camera className="w-3.5 h-3.5" />
             </Button>
           </CardFooter>
         </Card>
       )}
 
-      {/* STEP 3: 2-3 SMARTPHONE PHOTO CAPTURE */}
+      {/* STEP 3: SMARTPHONE PHOTO CAPTURE (2-3 PHOTOS) */}
       {currentStep === 3 && (
         <div className="space-y-4">
-          <Card className="border border-border shadow-xs">
-            <CardHeader className="bg-muted/30 pb-3 border-b border-border">
+          <Card className="border border-border shadow-sm overflow-hidden">
+            <CardHeader className="pb-3 border-b border-border bg-card">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <CardTitle className="text-base font-bold flex items-center gap-2">
-                    <Camera className="w-4 h-4 text-primary" />
-                    Capture 2–3 Smartphone Photos
+                  <CardTitle className="text-base font-bold font-serif text-foreground flex items-center gap-2">
+                    <Camera className="w-4 h-4 text-emerald-600" />
+                    <span>Capture 2–3 Smartphone Photos for {selectedCrop}</span>
                   </CardTitle>
-                  <CardDescription className="text-xs mt-0.5">
-                    Capture <strong>Main Sample</strong> and <strong>Close-up</strong> (Required), plus <strong>Wider Context</strong> (Optional).
+                  <CardDescription className="text-xs text-muted-foreground">
+                    Required: 1 Main Photo + 1 Close-Up. Optional: 1 Context Photo.
                   </CardDescription>
                 </div>
+
                 <div className="flex items-center gap-2">
-                  <Badge variant={hasMinimumPhotos ? 'default' : 'outline'} className="text-[10px] font-mono">
-                    {photoCount} of 3 Captured
-                  </Badge>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={loadPresetPhotos} 
-                    className="text-xs h-7 border-stone-300"
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={loadCropPresetPhotos}
+                    className="text-xs border-stone-300 gap-1.5 text-stone-700 dark:text-stone-300"
                   >
-                    Use Demo Photos
+                    <ImageIcon className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Load {selectedCrop} Demo Photos</span>
                   </Button>
                 </div>
               </div>
             </CardHeader>
 
-            <CardContent className="pt-4 space-y-4">
-              {/* Photo Slots Selector Tabs */}
+            <CardContent className="p-4 sm:p-6 space-y-6">
+              
+              {/* Photo Slot Selection Tabs */}
               <div className="grid grid-cols-3 gap-2">
-                {/* Slot 1: Main */}
+                {/* Slot 1: Main Photo */}
                 <button
                   type="button"
                   onClick={() => setActivePhotoSlot('main')}
-                  className={`p-3 rounded-xl border text-left transition-all ${
+                  className={`p-3 rounded-xl border text-left transition-all relative ${
                     activePhotoSlot === 'main'
-                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
+                      ? 'border-emerald-600 bg-emerald-500/10 ring-2 ring-emerald-600/30'
                       : 'border-border bg-card hover:bg-muted/40'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold">1. Main Sample</span>
+                    <span className="font-bold text-xs">1. Main Sample</span>
                     {photos.main ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     ) : (
-                      <span className="text-[10px] font-mono text-red-500 font-semibold">*Req</span>
+                      <span className="text-[9px] font-mono text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded">Required</span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground truncate">
-                    {photos.main ? 'Captured' : 'Overall view (25cm)'}
+                  <p className="text-[10px] text-muted-foreground line-clamp-1">
+                    Overall view of sample
                   </p>
+                  {photos.main && (
+                    <img
+                      src={photos.main}
+                      alt="Main sample"
+                      className="mt-2 w-full h-14 object-cover rounded-md border border-border"
+                    />
+                  )}
                 </button>
 
-                {/* Slot 2: Close-up */}
+                {/* Slot 2: Close-Up Photo */}
                 <button
                   type="button"
                   onClick={() => setActivePhotoSlot('closeUp')}
-                  className={`p-3 rounded-xl border text-left transition-all ${
+                  className={`p-3 rounded-xl border text-left transition-all relative ${
                     activePhotoSlot === 'closeUp'
-                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
+                      ? 'border-emerald-600 bg-emerald-500/10 ring-2 ring-emerald-600/30'
                       : 'border-border bg-card hover:bg-muted/40'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold">2. Close-up</span>
+                    <span className="font-bold text-xs">2. Close-Up</span>
                     {photos.closeUp ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     ) : (
-                      <span className="text-[10px] font-mono text-red-500 font-semibold">*Req</span>
+                      <span className="text-[9px] font-mono text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded">Required</span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground truncate">
-                    {photos.closeUp ? 'Captured' : 'Macro detail (10cm)'}
+                  <p className="text-[10px] text-muted-foreground line-clamp-1">
+                    Macro surface texture
                   </p>
+                  {photos.closeUp && (
+                    <img
+                      src={photos.closeUp}
+                      alt="Close-up sample"
+                      className="mt-2 w-full h-14 object-cover rounded-md border border-border"
+                    />
+                  )}
                 </button>
 
-                {/* Slot 3: Context (Optional) */}
+                {/* Slot 3: Context Photo */}
                 <button
                   type="button"
                   onClick={() => setActivePhotoSlot('context')}
-                  className={`p-3 rounded-xl border text-left transition-all ${
+                  className={`p-3 rounded-xl border text-left transition-all relative ${
                     activePhotoSlot === 'context'
-                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
+                      ? 'border-emerald-600 bg-emerald-500/10 ring-2 ring-emerald-600/30'
                       : 'border-border bg-card hover:bg-muted/40'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold">3. Context</span>
+                    <span className="font-bold text-xs">3. Context</span>
                     {photos.context ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     ) : (
-                      <span className="text-[10px] font-mono text-muted-foreground">Opt</span>
+                      <span className="text-[9px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Optional</span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground truncate">
-                    {photos.context ? 'Captured' : 'Trolley / Lot View'}
+                  <p className="text-[10px] text-muted-foreground line-clamp-1">
+                    Bag / lot surroundings
                   </p>
+                  {photos.context && (
+                    <img
+                      src={photos.context}
+                      alt="Context view"
+                      className="mt-2 w-full h-14 object-cover rounded-md border border-border"
+                    />
+                  )}
                 </button>
               </div>
 
-              {/* Viewfinder / Preview Container for Active Slot */}
-              <div className="relative rounded-xl overflow-hidden border-2 border-stone-800 bg-stone-950 aspect-4/3 sm:aspect-video flex items-center justify-center">
-                {/* Active Photo Captured Preview */}
-                {photos[activePhotoSlot] ? (
+              {/* Viewfinder / Active Capture Viewport */}
+              <div className="relative aspect-[4/3] sm:aspect-video bg-stone-950 rounded-xl overflow-hidden border-2 border-stone-800 flex flex-col items-center justify-center">
+                {isCameraActive ? (
+                  <>
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full h-full object-cover"
+                    />
+
+                    {/* Framing Guidelines Overlay */}
+                    <div className="absolute inset-4 sm:inset-8 border border-white/40 rounded-lg pointer-events-none flex flex-col justify-between p-2">
+                      <div className="flex justify-between text-[10px] font-mono text-white/80 drop-shadow">
+                        <span>KISANDRISHTI CAM</span>
+                        <span>SLOT: {activePhotoSlot.toUpperCase()} ({selectedCrop})</span>
+                      </div>
+                      <div className="text-center text-[11px] text-white/90 bg-black/60 py-1 px-3 rounded-full backdrop-blur self-center">
+                        {activePhotoSlot === 'main' && `Center the full ${selectedCrop} sample spread`}
+                        {activePhotoSlot === 'closeUp' && `Bring camera closer (10-15cm) for macro ${selectedCrop} texture`}
+                        {activePhotoSlot === 'context' && 'Include lot bags or mandi surrounding area (Optional)'}
+                      </div>
+                      <div className="flex justify-between text-[10px] font-mono text-white/80 drop-shadow">
+                        <span>DAYLIGHT / NO FLASH</span>
+                        <span>TAP TO SNAP</span>
+                      </div>
+                    </div>
+
+                    {/* Active Camera Action Controls */}
+                    <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-4 z-10 px-4">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={toggleCameraFacing}
+                        className="text-xs bg-black/60 hover:bg-black/80 text-white backdrop-blur border border-white/20"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 mr-1" />
+                        Flip Camera
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        onClick={takeSnapshot}
+                        className="rounded-full w-14 h-14 p-0 bg-white text-stone-950 hover:bg-white/90 shadow-lg ring-4 ring-emerald-500/50 flex items-center justify-center"
+                      >
+                        <div className="w-10 h-10 rounded-full border-2 border-stone-950" />
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-xs bg-black/60 hover:bg-black/80 text-white backdrop-blur border border-white/20"
+                      >
+                        <Upload className="w-3.5 h-3.5 mr-1" />
+                        Upload
+                      </Button>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileUpload}
+                      />
+                    </div>
+                  </>
+                ) : photos[activePhotoSlot] ? (
+                  /* Display Captured Photo */
                   <div className="relative w-full h-full">
                     <img
                       src={photos[activePhotoSlot]}
-                      alt={`${activePhotoSlot} view`}
+                      alt={`${activePhotoSlot} preview`}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-xs text-white px-3 py-1 rounded-full text-xs font-mono flex items-center gap-1.5 border border-white/20">
+
+                    <div className="absolute top-3 left-3 bg-black/70 text-white text-xs px-2.5 py-1 rounded-md backdrop-blur flex items-center gap-1.5 font-mono">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>{activePhotoSlot.toUpperCase()} PHOTO READY</span>
+                      <span>{activePhotoSlot.toUpperCase()} PHOTO READY ({selectedCrop})</span>
                     </div>
 
                     <div className="absolute bottom-3 right-3 flex items-center gap-2">
                       <Button
                         size="sm"
                         variant="destructive"
-                        className="text-xs h-8 gap-1 shadow-lg"
                         onClick={() => clearPhotoSlot(activePhotoSlot)}
+                        className="text-xs h-8"
                       >
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        <span>Retake This Photo</span>
+                        <X className="w-3.5 h-3.5 mr-1" />
+                        Retake
                       </Button>
-                    </div>
-                  </div>
-                ) : isCameraActive ? (
-                  /* Live Camera Viewfinder */
-                  <div className="relative w-full h-full">
-                    <video
-                      ref={videoRef}
-                      playsInline
-                      muted
-                      className="w-full h-full object-cover"
-                    />
-
-                    {/* Framing HUD Overlay */}
-                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="bg-black/70 backdrop-blur-xs text-emerald-400 px-3 py-1 rounded text-[11px] font-mono border border-emerald-500/30 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                          <span>LIVE CAMERA: {activePhotoSlot.toUpperCase()} VIEW</span>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={toggleCameraFacing}
-                          className="pointer-events-auto h-7 px-2 text-[11px] bg-black/60 text-white hover:bg-black/80 border border-white/20"
-                        >
-                          <RefreshCw className="w-3 h-3 mr-1" />
-                          Flip Camera
-                        </Button>
-                      </div>
-
-                      {/* Optical Framing Guide */}
-                      <div className="mx-auto border-2 border-dashed border-white/60 rounded-xl w-3/4 h-3/5 flex items-center justify-center">
-                        <span className="text-white/80 text-xs font-medium bg-black/50 px-2 py-1 rounded">
-                          {activePhotoSlot === 'main' && 'Center Representative Sample Here'}
-                          {activePhotoSlot === 'closeUp' && 'Macro View: Fill Frame with 20–30 Grains'}
-                          {activePhotoSlot === 'context' && 'Wider Context: Show Trolley / Bag Area'}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-center pointer-events-auto">
-                        <Button
-                          size="lg"
-                          onClick={takeSnapshot}
-                          className="rounded-full w-14 h-14 bg-white text-stone-900 hover:bg-stone-200 border-4 border-stone-800 shadow-2xl p-0 flex items-center justify-center"
-                        >
-                          <Camera className="w-6 h-6" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  /* Empty Slot Prompt */
-                  <div className="text-center p-6 space-y-4 max-w-sm">
-                    <div className="w-12 h-12 rounded-full bg-stone-900 border border-stone-700 text-stone-300 flex items-center justify-center mx-auto">
-                      <Camera className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="text-stone-200 text-sm font-bold">
-                        {activePhotoSlot === 'main' && 'Capture Photo 1: Main Sample'}
-                        {activePhotoSlot === 'closeUp' && 'Capture Photo 2: Close-up Detail'}
-                        {activePhotoSlot === 'context' && 'Capture Photo 3: Wider Context (Optional)'}
-                      </h4>
-                      <p className="text-stone-400 text-xs mt-1">
-                        Use your smartphone camera or upload a file from gallery.
-                      </p>
-                    </div>
-
-                    {cameraError && (
-                      <p className="text-[11px] text-amber-400 bg-amber-950/60 p-2 rounded border border-amber-800">
-                        {cameraError}
-                      </p>
-                    )}
-
-                    <div className="flex flex-wrap justify-center gap-2 pt-1">
                       <Button
                         size="sm"
                         onClick={() => startCamera()}
-                        className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                        className="text-xs h-8 bg-emerald-700 hover:bg-emerald-800 text-white"
+                      >
+                        <Camera className="w-3.5 h-3.5 mr-1" />
+                        Open Live Camera
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  /* Placeholder when camera is inactive and no photo */
+                  <div className="text-center p-6 space-y-4 max-w-sm">
+                    <div className="w-12 h-12 rounded-full bg-stone-800 text-stone-300 flex items-center justify-center mx-auto">
+                      <Camera className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white">
+                        {activePhotoSlot === 'main' && `Capture Main ${selectedCrop} Photo`}
+                        {activePhotoSlot === 'closeUp' && `Capture Close-Up ${selectedCrop} Photo`}
+                        {activePhotoSlot === 'context' && `Capture Context Photo (Optional)`}
+                      </h4>
+                      <p className="text-xs text-stone-400 mt-1">
+                        Use your smartphone camera or upload an image from your device.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => startCamera()}
+                        className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white gap-1.5"
                       >
                         <Camera className="w-3.5 h-3.5" />
                         <span>Open Smartphone Camera</span>
@@ -938,7 +992,7 @@ export const NewAuditPage: React.FC = () => {
           <div className="p-3 rounded-lg border border-border bg-stone-50 dark:bg-stone-900/40 text-[11px] text-muted-foreground max-w-md mx-auto text-left">
             <span className="font-semibold text-foreground block mb-0.5">Strict Epistemic Protocol:</span>
             <span>
-              KisanDrishti only records observable visual features (broken, discolored, foreign material). It will never fabricate moisture or chemical measurements.
+              KisanDrishti only records observable visual features (broken, discolored, foreign material) for {selectedCrop}. It will never fabricate moisture or chemical measurements.
             </span>
           </div>
         </Card>

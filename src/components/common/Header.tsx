@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
     { name: 'Dashboard', path: '/' },
     { name: t.startAudit || 'Start Audit', path: '/audit/new', highlight: true },
     { name: t.records || 'Evidence Records', path: '/records' },
-    { name: t.demoMode || 'Demo Mode', path: '/demo', badge: 'Wheat Sample' },
+    { name: t.demoMode || 'Demo Mode', path: '/demo', badge: 'Interactive' },
     { name: t.calibrationSheet || 'Calibration Sheet', path: '/calibration-sheet' },
     { name: t.protocol || 'How It Works', path: '/protocol' },
   ];

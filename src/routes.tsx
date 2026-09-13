@@ -29,8 +29,26 @@ export const routes: RouteConfig[] = [
     public: true,
   },
   {
+    name: 'Create Evidence',
+    path: '/create',
+    element: <NewAuditPage />,
+    public: true,
+  },
+  {
     name: 'Audit Evidence Record',
     path: '/records/:id',
+    element: <AuditDetailPage />,
+    public: true,
+  },
+  {
+    name: 'Audit Detail Alias',
+    path: '/audits/:id',
+    element: <AuditDetailPage />,
+    public: true,
+  },
+  {
+    name: 'Audit Single Alias',
+    path: '/audit/:id',
     element: <AuditDetailPage />,
     public: true,
   },
@@ -41,13 +59,19 @@ export const routes: RouteConfig[] = [
     public: true,
   },
   {
-    name: 'Demo Mode (Wheat Sample)',
+    name: 'Evidence Repository Alias',
+    path: '/audits',
+    element: <EvidenceRecordsPage />,
+    public: true,
+  },
+  {
+    name: 'Demo Mode (Interactive Demo)',
     path: '/demo',
     element: <DemoPage />,
     public: true,
   },
   {
-    name: 'Physical Calibration Sheet',
+    name: 'Physical Alignment Sheet',
     path: '/calibration-sheet',
     element: <CalibrationSheetPage />,
     public: true,
