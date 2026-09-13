@@ -6,6 +6,9 @@ import { EvidenceRecordsPage } from './pages/EvidenceRecordsPage';
 import { DemoPage } from './pages/DemoPage';
 import { CalibrationSheetPage } from './pages/CalibrationSheetPage';
 import { ProtocolPage } from './pages/ProtocolPage';
+import { MandiPricesPage } from './pages/MandiPricesPage';
+import { QualityCalculatorPage } from './pages/QualityCalculatorPage';
+import { GrainEncyclopediaPage } from './pages/GrainEncyclopediaPage';
 
 export interface RouteConfig {
   name: string;
@@ -74,6 +77,24 @@ export const routes: RouteConfig[] = [
     name: 'Interactive Showcase Alias',
     path: '/demo',
     element: <DemoPage />,
+    public: true,
+  },
+  {
+    name: 'Live APMC Mandi Prices',
+    path: '/prices',
+    element: <MandiPricesPage />,
+    public: true,
+  },
+  {
+    name: 'Grain Quality Calculator',
+    path: '/calculator',
+    element: <QualityCalculatorPage />,
+    public: true,
+  },
+  {
+    name: 'Visual Grain Encyclopedia',
+    path: '/encyclopedia',
+    element: <GrainEncyclopediaPage />,
     public: true,
   },
   {

@@ -34,6 +34,9 @@ KisanDrishti is a low-cost smartphone-based mobile application that provides a T
 - Transaction transparency: Creating verifiable evidence of sample condition at time of capture
 - Historical reference: Maintaining records of past transactions for comparison
 - Bulk evidence management: Enterprise users managing multiple evidence records
+- Market intelligence: Users access live APMC Mandi price data and MSP benchmarks for informed negotiation
+- Quality impact simulation: Users estimate price adjustments based on observable visual defect rates
+- Grain identification: Users reference visual encyclopedia for physical grain characteristics
 
 ---
 
@@ -56,20 +59,28 @@ KisanDrishti Mobile App
 │   ├── Gemini Explanation Panel
 │   └── Tamper-Evident Evidence Record
 ├── Evidence Card & Shareable Report
+├── PDF Evidence Certificate Export
 ├── Evidence History & Repository
 ├── Interactive Evidence Showcase & Benchmark Protocol
+├── Live APMC Mandi Price Intelligence & MSP Benchmarks
+├── Interactive Grain Quality & Fair Price Impact Calculator
+├── Visual Grain Encyclopedia & Physical Identification Field Guide
 └── How It Works
 ```
 
 ### 3.1 Home / Dashboard
 
 **Elements:**
-- KisanDrishti logo and name display
+- Dynamic SVG Animated KisanDrishti Logo (Optical Lens + Golden Wheat Sheaf + Cryptographic Shield)
+- Interactive Live Optical Scanner Animation (radar sweep effect)
 - Tagline: \"Evidence Before Valuation\"
 - Create Evidence button
 - My Evidence Records button
 - How It Works button
 - Interactive Evidence Showcase button
+- Live APMC Mandi Prices button
+- Grain Quality Calculator button
+- Visual Grain Encyclopedia button
 - Disclaimer section
 
 **Dashboard Metrics:**
@@ -82,11 +93,16 @@ KisanDrishti Mobile App
 - Evidence Timeline: chronological view of evidence creation activity
 
 **Functionality:**
+- Display animated KisanDrishti logo with optical lens, wheat sheaf, and cryptographic shield elements
+- Render interactive live optical scanner animation with radar sweep effect
 - Display clear disclaimer: \"KisanDrishti provides visual evidence only. It does not provide official mandi grading, laboratory testing, moisture measurement, chemical analysis, or financial/legal adjudication. It does not decide what the crop is worth—it creates standardized visual evidence that both sides can inspect.\"
 - Navigate to Create Evidence flow
 - Navigate to Evidence History
 - Navigate to How It Works information page
 - Navigate to Interactive Evidence Showcase
+- Navigate to Live APMC Mandi Price Intelligence
+- Navigate to Interactive Grain Quality & Fair Price Impact Calculator
+- Navigate to Visual Grain Encyclopedia
 - Display professional agricultural infrastructure style dashboard with clean metrics
 
 **Visual Design System:**
@@ -144,6 +160,7 @@ KisanDrishti Mobile App
 
 **Capture Interface:**
 - Camera viewfinder with simple framing guide
+- Interactive Live Optical Scanner Animation overlay (radar sweep effect)
 - Capture button for each required photo
 - Photo counter (1/2, 2/2, or 1/3, 2/3, 3/3)
 - Retake button for each photo
@@ -156,6 +173,7 @@ KisanDrishti Mobile App
 
 **Functionality:**
 - Access device camera for photo capture
+- Display interactive optical scanner animation during capture
 - Capture 2-3 photos in sequence
 - Allow retake for any photo
 - Display preview thumbnails
@@ -429,7 +447,7 @@ Content:
 - Additional disclaimer: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
 
 **Export Options:**
-- Export to PDF
+- Export to PDF Evidence Certificate
 - Shareable web link (recipient view mode without app install requirement)
 - QR code generation for quick access
 - Copy Link button
@@ -442,7 +460,7 @@ Content:
 
 **Functionality:**
 - Generate formatted evidence card
-- Render PDF version for download
+- Render PDF Evidence Certificate for download
 - Create shareable web link with unique URL
 - Generate QR code for evidence access
 - Format WhatsApp message with evidence summary and link
@@ -450,7 +468,41 @@ Content:
 - Provide copy-to-clipboard functionality for link
 - Display recipient view mode for shared links (read-only access with interactive viewer)
 
-### 3.13 Evidence History & Repository
+### 3.13 PDF Evidence Certificate Export
+
+**Certificate Content:**
+- KisanDrishti logo and branding
+- Certificate title: \"Tamper-Evident Visual Evidence Certificate\"
+- Evidence ID and QR code
+- Crop/Commodity and variety
+- Lot ID and location
+- Capture timestamp
+- Observable visual evidence summary metrics
+- High-resolution photo thumbnails (2-3 photos)
+- Evidence matrix table
+- Cryptographic hash (SHA-256)
+- Hash verification instructions
+- Mandatory disclaimers
+- Certificate generation timestamp
+
+**PDF Format:**
+- Professional layout with KisanDrishti branding
+- High-resolution images embedded
+- Structured sections with clear headings
+- QR code for web verification
+- Printable format (A4 size)
+
+**Functionality:**
+- Generate PDF certificate from evidence record
+- Embed high-resolution photos
+- Include QR code linking to web verification
+- Format evidence matrix as table
+- Display cryptographic hash prominently
+- Include all mandatory disclaimers
+- Enable download to device storage
+- Support sharing via email or messaging apps
+
+### 3.14 Evidence History & Repository
 
 **Display Elements:**
 - List of previous evidence records
@@ -476,7 +528,7 @@ Content:
 - Quick hash verification from list view
 - Navigate to full evidence record on selection
 
-### 3.14 Interactive Evidence Showcase & Benchmark Protocol
+### 3.15 Interactive Evidence Showcase & Benchmark Protocol
 
 **Purpose:**
 - Provide production-ready reference evidence records for major Indian agricultural commodities
@@ -491,6 +543,16 @@ Content:
 - Soybean
 - Maize
 - Chana (Chickpea)
+- Cotton
+
+**High-Definition Sample Photography Package:**
+
+For each commodity (Wheat, Paddy, Mustard, Soybean, Maize, Chana, Cotton):
+- Main sample photo: high-resolution overall view (minimum 1920x1080)
+- Macro close-up photo: detailed grain/fiber structure view
+- Lot context photo: wider view showing sample placement and environment
+- All photos captured using standard smartphone camera
+- Photos demonstrate proper lighting, framing, and sample visibility
 
 **Evidence Record Structure (per commodity):**
 
@@ -502,11 +564,10 @@ Content:
 - Lot size and transaction context
 
 **Visual Evidence Package:**
-- High-resolution main sample photo (minimum 1920x1080)
-- High-resolution close-up photo
-- Optional context photo
-- All photos captured using standard smartphone camera
-- Photos demonstrate proper lighting, framing, and sample visibility
+- High-resolution main sample photo
+- High-resolution macro close-up photo
+- Lot context photo
+- All photos from high-definition sample photography package
 
 **Analysis Results:**
 - Observable visual evidence metrics:
@@ -544,10 +605,11 @@ Interactive Evidence Showcase
 │   ├── Mustard
 │   ├── Soybean
 │   ├── Maize
-│   └── Chana
+│   ├── Chana
+│   └── Cotton
 ├── Evidence Record Detail View (per commodity)
 │   ├── Metadata Display
-│   ├── High-Res Photo Gallery
+│   ├── High-Res Photo Gallery (Main, Macro Close-up, Lot Context)
 │   ├── Interactive Spatial Viewer
 │   ├── Evidence Matrix
 │   ├── Gemini Explanations
@@ -556,7 +618,7 @@ Interactive Evidence Showcase
 ```
 
 **Commodity Selection Grid:**
-- Display six commodity cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana)
+- Display seven commodity cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana, Cotton)
 - Each card shows:
   + Commodity name and variety
   + APMC Mandi location
@@ -567,7 +629,7 @@ Interactive Evidence Showcase
 **Evidence Record Detail View:**
 - Full-screen presentation of complete evidence record
 - Metadata section displaying lot ID, APMC Mandi, capture date/time, lot size
-- High-resolution photo gallery with swipe navigation
+- High-resolution photo gallery with swipe navigation (main, macro close-up, lot context)
 - Interactive spatial viewer with zoom/pan and numbered markers
 - Evidence matrix with expandable rows
 - Gemini explanation panels accessible via marker selection
@@ -582,7 +644,7 @@ Interactive Evidence Showcase
 **Functionality:**
 - Display commodity selection grid on showcase entry
 - Navigate to detailed evidence record on commodity selection
-- Render high-resolution photos with interactive viewer
+- Render high-resolution photos from sample photography package
 - Enable zoom/pan/marker interaction identical to user-created evidence
 - Provide hash verification for each benchmark record
 - Allow navigation between different commodity evidence records
@@ -591,7 +653,7 @@ Interactive Evidence Showcase
 
 **Data Requirements:**
 - Authentic verified lot IDs from real APMC Mandi transactions
-- High-resolution photos captured using standard smartphone cameras
+- High-definition sample photography package for all 7 crops
 - Realistic visual analysis results based on actual sample conditions
 - Valid SHA-256 hashes computed from complete evidence packages
 - Accurate APMC Mandi location references
@@ -603,7 +665,192 @@ Interactive Evidence Showcase
 - Evidence records must include complete metadata
 - All disclaimers must be displayed prominently
 
-### 3.15 How It Works
+### 3.16 Live APMC Mandi Price Intelligence & MSP Benchmarks
+
+**Purpose:**
+- Provide real-time market price data from major APMC Mandis across India
+- Display Minimum Support Price (MSP) benchmarks for reference
+- Enable farmers and buyers to access transparent pricing information
+- Support informed negotiation based on current market conditions
+
+**Commodity Coverage:**
+- Wheat
+- Paddy/Rice
+- Mustard
+- Soybean
+- Maize
+- Cotton
+- Chana/Chickpea
+
+**Data Display:**
+
+**APMC Mandi Price Table:**
+- Commodity name
+- APMC Mandi location (state and mandi name)
+- Current price (per quintal)
+- Price change indicator (increase/decrease/stable)
+- Last updated timestamp
+- MSP benchmark for comparison
+
+**Price Visualization:**
+- Price trend charts showing historical price movement
+- Comparison across multiple APMC Mandis for same commodity
+- MSP reference line on charts
+
+**Filter and Search:**
+- Filter by commodity type
+- Filter by state/region
+- Search by APMC Mandi name
+- Sort by price (high to low, low to high)
+- Sort by last updated time
+
+**Functionality:**
+- Display live APMC Mandi price data in table format
+- Show MSP benchmarks alongside market prices
+- Render price trend charts with historical data
+- Enable filtering by commodity and region
+- Provide search functionality for specific mandis
+- Display price change indicators (up/down arrows, percentage change)
+- Show last updated timestamp for each price entry
+- Refresh data periodically to maintain currency
+
+**Disclaimer:**
+- \"Price data is sourced from publicly available APMC Mandi records. KisanDrishti does not guarantee accuracy or completeness. Users should verify prices independently before transactions.\"
+
+### 3.17 Interactive Grain Quality & Fair Price Impact Calculator
+
+**Purpose:**
+- Simulate real-time price adjustments based on observable visual defect rates
+- Help users understand relationship between quality parameters and pricing
+- Provide transparent calculation of potential deductions or premiums
+- Enable informed negotiation based on visual evidence
+
+**Input Parameters:**
+
+**Base Price:**
+- Current APMC Mandi price (auto-populated from Live Price Intelligence)
+- Manual entry option for custom base price
+
+**Observable Visual Defect Rates:**
+- Broken/Damaged Material: percentage slider (0-100%)
+- Visible Discoloration: percentage slider (0-100%)
+- Visible Foreign Material: count input
+- Abnormal Appearance: percentage slider (0-100%)
+- Physical Surface Damage: percentage slider (0-100%)
+
+**Calculation Logic:**
+
+**Deduction Rules:**
+- Broken/Damaged Material: deduction per percentage point
+- Visible Discoloration: deduction per percentage point
+- Visible Foreign Material: deduction per unit count
+- Abnormal Appearance: deduction per percentage point
+- Physical Surface Damage: deduction per percentage point
+
+**Premium Rules:**
+- Low defect rates may qualify for premium pricing
+- Premium thresholds defined per commodity
+
+**Output Display:**
+
+**Adjusted Price Calculation:**
+- Base price
+- Total deductions (itemized by defect type)
+- Total premiums (if applicable)
+- Final adjusted price per quintal
+- Price impact percentage
+
+**Visual Breakdown:**
+- Bar chart showing deduction/premium breakdown
+- Comparison of base price vs. adjusted price
+- Color-coded indicators (red for deductions, green for premiums)
+
+**Functionality:**
+- Auto-populate base price from Live APMC Mandi Price Intelligence
+- Allow manual adjustment of base price
+- Provide interactive sliders for defect rate input
+- Calculate real-time price adjustments as user modifies inputs
+- Display itemized deduction/premium breakdown
+- Render visual chart showing price impact
+- Enable saving of calculation scenarios
+- Support sharing of calculation results
+
+**Disclaimer:**
+- \"This calculator provides estimated price adjustments based on observable visual defect rates. Actual pricing depends on multiple factors including market conditions, buyer preferences, and negotiation. KisanDrishti does not guarantee accuracy of calculations or final transaction prices.\"
+
+### 3.18 Visual Grain Encyclopedia & Physical Identification Field Guide
+
+**Purpose:**
+- Provide comprehensive visual reference for physical grain characteristics
+- Enable users to identify and distinguish between different grain types
+- Support quality assessment through visual comparison
+- Educate users on observable grain features
+
+**Commodity Coverage:**
+- Wheat
+- Basmati Paddy
+- Mustard
+- Soybean
+- Maize
+- Chana/Chickpea
+- Cotton
+
+**Encyclopedia Structure (per commodity):**
+
+**Visual Reference Gallery:**
+- High-resolution photos of ideal/premium quality grains
+- Photos of common defects (broken, discolored, damaged)
+- Photos of foreign material examples
+- Macro close-up photos showing grain structure details
+
+**Physical Characteristics:**
+- Grain shape and size description
+- Color range (normal and abnormal)
+- Texture and surface features
+- Typical dimensions
+
+**Quality Indicators:**
+- Visual signs of good quality
+- Common defects and their visual appearance
+- Foreign material types commonly found
+- Damage patterns (insect, moisture, mechanical)
+
+**Identification Tips:**
+- Key distinguishing features
+- Comparison with similar grain types
+- Visual cues for variety identification
+
+**Navigation Structure:**
+
+```
+Visual Grain Encyclopedia
+├── Commodity Selection
+│   ├── Wheat
+│   ├── Basmati Paddy
+│   ├── Mustard
+│   ├── Soybean
+│   ├── Maize
+│   ├── Chana
+│   └── Cotton
+├── Commodity Detail View
+│   ├── Visual Reference Gallery
+│   ├── Physical Characteristics
+│   ├── Quality Indicators
+│   └── Identification Tips
+└── Comparison View (side-by-side commodity comparison)
+```
+
+**Functionality:**
+- Display commodity selection grid
+- Navigate to detailed commodity view on selection
+- Render high-resolution photo galleries with zoom capability
+- Provide swipe navigation through photo galleries
+- Display structured information on physical characteristics
+- Enable side-by-side comparison of different commodities
+- Support search functionality for specific features or defects
+- Allow bookmarking of frequently referenced commodities
+
+### 3.19 How It Works
 
 **Content:**
 - Explanation of KisanDrishti purpose and positioning: low-cost smartphone-based visual evidence protocol, not a price predictor, laboratory, or grading authority
@@ -615,12 +862,16 @@ Interactive Evidence Showcase
 - Usage guidelines and best practices
 - Business model explanation: Free/very-low-cost for farmers; enterprise/procurement/traders/warehouses for bulk evidence management
 - Core message: \"Don't tell both sides what the crop is worth. Give both sides the same visual evidence to inspect.\"
+- Overview of Live APMC Mandi Price Intelligence feature
+- Overview of Interactive Grain Quality & Fair Price Impact Calculator
+- Overview of Visual Grain Encyclopedia
 
 **Functionality:**
 - Display informational content about application
 - Provide educational material on visual evidence protocol
 - Explain limitations and appropriate use cases
 - Describe business model and pricing
+- Explain new features (Price Intelligence, Calculator, Encyclopedia)
 
 ---
 
@@ -642,7 +893,7 @@ Interactive Evidence Showcase
 - Never provide internal defect assessments
 - Never provide nutritional value measurements
 - Never provide laboratory measurement values
-- Never calculate rupee deductions or price adjustments
+- Never calculate rupee deductions or price adjustments (except in Fair Price Impact Calculator with explicit disclaimer)
 - Never provide final commercial grade designation
 - Never claim to provide official mandi grading
 - Never claim legal or financial adjudication authority
@@ -811,6 +1062,9 @@ Interactive Evidence Showcase
 - Free or very-low-cost access
 - Core evidence creation functionality
 - Basic sharing and export features
+- Access to Live APMC Mandi Price Intelligence
+- Access to Interactive Grain Quality & Fair Price Impact Calculator
+- Access to Visual Grain Encyclopedia
 
 **Enterprise Tier:**
 - Paid subscription for enterprise/procurement/traders/warehouses
@@ -823,9 +1077,9 @@ Interactive Evidence Showcase
 ### 4.10 Interactive Evidence Showcase Data Management
 
 **Benchmark Evidence Records:**
-- Six production-ready evidence records (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana)
+- Seven production-ready evidence records (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana, Cotton)
 - Each record includes authentic verified lot ID from real APMC Mandi
-- High-resolution photos captured using standard smartphone cameras
+- High-definition sample photography package (main, macro close-up, lot context)
 - Complete visual analysis results with spatial viewer data
 - Valid SHA-256 hashes for tamper-evident verification
 
@@ -841,13 +1095,125 @@ Interactive Evidence Showcase
 - Hash verification must demonstrate successful integrity check
 - Evidence records must include complete metadata and disclaimers
 
-### 4.11 Data Flow
+### 4.11 Live APMC Mandi Price Intelligence Logic
+
+**Data Source:**
+- Price data sourced from publicly available APMC Mandi records
+- MSP benchmarks sourced from government agricultural policy documents
+
+**Data Refresh:**
+- Price data refreshed periodically (e.g., hourly or daily)
+- Display last updated timestamp for each price entry
+
+**Price Change Calculation:**
+- Compare current price with previous price
+- Calculate percentage change
+- Display increase/decrease/stable indicator
+
+**Disclaimer Display:**
+- Prominently display disclaimer about data accuracy and verification responsibility
+
+### 4.12 Interactive Grain Quality & Fair Price Impact Calculator Logic
+
+**Base Price Auto-Population:**
+- Retrieve current APMC Mandi price from Live Price Intelligence
+- Auto-populate base price field
+- Allow manual override
+
+**Deduction Calculation:**
+- Apply deduction rules per defect type
+- Calculate total deductions
+- Itemize deductions by defect category
+
+**Premium Calculation:**
+- Check if defect rates qualify for premium pricing
+- Apply premium rules if thresholds met
+- Calculate total premiums
+
+**Final Price Calculation:**
+- Final Price = Base Price - Total Deductions + Total Premiums
+- Calculate price impact percentage: ((Final Price - Base Price) / Base Price) × 100
+
+**Real-Time Update:**
+- Recalculate immediately when user adjusts any input parameter
+- Update visual chart dynamically
+
+**Disclaimer Display:**
+- Prominently display disclaimer about estimation nature and actual pricing factors
+
+### 4.13 Visual Grain Encyclopedia Logic
+
+**Photo Gallery Management:**
+- Store high-resolution photos for each commodity
+- Organize photos by category (ideal quality, defects, foreign material, macro close-ups)
+- Enable zoom and pan for detailed inspection
+
+**Search Functionality:**
+- Enable search by commodity name
+- Enable search by defect type
+- Enable search by physical characteristic
+
+**Comparison View:**
+- Allow side-by-side comparison of two commodities
+- Highlight distinguishing features
+- Display comparative physical characteristics
+
+### 4.14 Brand Identity & Motion Design
+
+**Dynamic SVG Animated Logo:**
+- Logo components: Optical Lens, Golden Wheat Sheaf, Cryptographic Shield
+- Animation sequence: lens focus effect, wheat sheaf growth, shield formation
+- Animation duration: 2-3 seconds
+- Animation trigger: app launch, page load
+
+**Interactive Live Optical Scanner Animation:**
+- Radar sweep effect with circular motion
+- Color: emerald/green tones consistent with brand palette
+- Animation loop: continuous during capture process
+- Display locations: Home dashboard, Create Evidence page during photo capture
+
+### 4.15 PDF Evidence Certificate Generation
+
+**Certificate Layout:**
+- Header: KisanDrishti logo and certificate title
+- Body: Evidence metadata, photos, evidence matrix, hash
+- Footer: Disclaimers, generation timestamp
+
+**PDF Generation Process:**
+- Retrieve complete evidence record
+- Format content for PDF layout
+- Embed high-resolution photos
+- Generate QR code linking to web verification
+- Render PDF document
+- Save to device storage
+
+**Sharing Options:**
+- Share via email
+- Share via messaging apps
+- Upload to cloud storage
+
+### 4.16 GitHub and Vercel Configuration
+
+**GitHub Repository:**
+- Repository URL: https://github.com/keshavporwal73-ux/KisanDrishti
+- Repository structure includes source code, assets, configuration files
+
+**Vercel Deployment:**
+- Application deployed on Vercel platform
+- SPA routing configuration via vercel.json
+- vercel.json includes rewrites for client-side routing
+
+**vercel.json Configuration:**
+- Rewrites all routes to index.html for SPA behavior
+- Handles client-side routing without server-side redirects
+
+### 4.17 Data Flow
 
 **Evidence Creation Flow:**
 1. User selects crop/commodity and enters metadata
 2. System generates unique evidence ID
 3. User views capture instructions
-4. User captures 2-3 photos (main, close-up, optional context)
+4. User captures 2-3 photos (main, close-up, optional context) with optical scanner animation overlay
 5. System performs automatic capture quality gate checks
 6. If quality gate fails, system displays failure screen with recapture guidance
 7. If quality gate passes, system performs local CV processing
@@ -856,7 +1222,7 @@ Interactive Evidence Showcase
 10. System generates evidence matrix and spatial viewer data
 11. System computes tamper-evident SHA-256 hash of evidence package
 12. System stores complete evidence record
-13. User can view, share, or export evidence record
+13. User can view, share, export to PDF, or export evidence record
 
 **Evidence Sharing Flow:**
 1. User selects evidence record to share
@@ -867,14 +1233,47 @@ Interactive Evidence Showcase
 6. Recipient views read-only evidence record with interactive viewer
 7. Recipient can verify tamper-evident hash
 
+**PDF Certificate Export Flow:**
+1. User selects evidence record
+2. User taps \"Export to PDF\" button
+3. System generates PDF certificate with complete evidence data
+4. System saves PDF to device storage
+5. User can share PDF via email or messaging apps
+
 **Interactive Evidence Showcase Flow:**
 1. User navigates to Interactive Evidence Showcase from dashboard
-2. System displays commodity selection grid with six options
+2. System displays commodity selection grid with seven options
 3. User selects commodity (e.g., Wheat)
-4. System loads production-ready evidence record for selected commodity
+4. System loads production-ready evidence record with high-definition sample photography
 5. User explores high-resolution photos, interactive spatial viewer, evidence matrix, Gemini explanations
 6. User verifies tamper-evident hash using verification widget
 7. User can navigate to other commodity evidence records or share benchmark evidence
+
+**Live APMC Mandi Price Intelligence Flow:**
+1. User navigates to Live APMC Mandi Price Intelligence from dashboard
+2. System retrieves current price data from data source
+3. System displays price table with APMC Mandi locations, prices, MSP benchmarks
+4. User filters by commodity or region
+5. User views price trend charts
+6. System refreshes data periodically
+
+**Interactive Grain Quality & Fair Price Impact Calculator Flow:**
+1. User navigates to Calculator from dashboard
+2. System auto-populates base price from Live Price Intelligence
+3. User adjusts defect rate sliders
+4. System calculates real-time price adjustments
+5. System displays itemized deduction/premium breakdown
+6. System renders visual chart showing price impact
+7. User can save or share calculation results
+
+**Visual Grain Encyclopedia Flow:**
+1. User navigates to Encyclopedia from dashboard
+2. System displays commodity selection grid
+3. User selects commodity (e.g., Wheat)
+4. System loads visual reference gallery and physical characteristics
+5. User explores high-resolution photos with zoom capability
+6. User can compare different commodities side-by-side
+7. User can search for specific features or defects
 
 ---
 
@@ -906,26 +1305,43 @@ Interactive Evidence Showcase
 | Alignment sheet not available | Allow evidence creation without alignment sheet, display notice that sheet is optional |
 | Interactive Evidence Showcase commodity record fails to load | Display error message, allow retry, provide fallback to other commodity records |
 | Hash verification widget fails in showcase | Display error message, indicate verification unavailable, allow continued exploration of evidence record |
+| PDF certificate generation fails | Display error message, allow retry, suggest checking device storage |
+| PDF file too large to share | Display warning, suggest compressing photos or sharing via web link instead |
+| Live APMC Mandi price data unavailable | Display message that price data is temporarily unavailable, suggest retry later |
+| Price data refresh fails | Display last successfully retrieved data with timestamp, indicate refresh failure |
+| Calculator base price auto-population fails | Allow manual entry, display notice that auto-population is unavailable |
+| Calculator deduction rules not defined for commodity | Use default deduction rules, display notice |
+| Encyclopedia photo fails to load | Display placeholder, allow retry, provide fallback to text description |
+| Encyclopedia search returns no results | Display \"No results found\" message, suggest alternative search terms |
+| Animated logo fails to load | Display static logo as fallback |
+| Optical scanner animation fails to render | Proceed without animation, display static capture interface |
+| GitHub synchronization fails | Display error message, suggest checking repository access |
+| Vercel deployment fails | Display error message, suggest checking vercel.json configuration |
 
 ---
 
 ## 6. Acceptance Criteria
 
-1. User opens KisanDrishti mobile app and sees dashboard displaying Evidence Records count, Capture Quality Pass Rate, Visual Findings count, Recent Evidence list, Interactive Evidence Showcase button, and prominent disclaimer stating the app provides visual evidence only and does not decide crop worth
-2. User taps Interactive Evidence Showcase button and views commodity selection grid displaying six cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana) with APMC Mandi locations and visual findings summaries
-3. User selects Wheat commodity card and views complete production-ready evidence record including verified lot ID from Khanna Mandi Punjab, high-resolution main and close-up photos, interactive spatial viewer with numbered markers, and tamper-evident SHA-256 hash
-4. User taps on \"Visible Foreign Material\" marker in showcase spatial viewer, triggering smooth zoom/pan animation to corresponding region with interactive bounding box highlight and displaying detailed Gemini explanation panel
-5. User navigates to Evidence Matrix in showcase and sees structured table with OBSERVED categories (broken/damaged material 5.2%, visible discoloration 1.4%, visible foreign material 3) and UNVERIFIED measurements clearly labeled \"Not tested\" (moisture, protein, chemical composition)
-6. User taps \"Verify Integrity\" button in showcase hash verification widget and sees successful verification result confirming evidence record has not been modified since creation
-7. User returns to commodity selection grid and explores Basmati Paddy evidence record from Karnal Mandi Haryana with different visual findings pattern, demonstrating protocol consistency across crop types
-8. User taps Create Evidence button from dashboard, selects crop \"Mustard\", enters lot ID \"LOT-2026-092\", location \"Indore\", and proceeds to capture instructions
-9. User captures main sample photo and close-up photo using smartphone camera, system displays photo counters and preview thumbnails, proceeds to automatic quality gate
-10. System performs quality gate checks (blur, shadows, lighting, glare, framing, sample visibility, overlap, resolution), all checks pass, system proceeds to hybrid vision analysis with progress indicators
-11. User views Evidence Result dashboard showing observable visual evidence metrics with interactive spatial viewer, taps on numbered marker to zoom/pan into flagged observation with detailed inspection card
-12. User navigates to Tamper-Evident Evidence Record showing evidence metadata, 2 uploaded photos, SHA-256 hash, hash verification widget, and mandatory disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
-13. User generates shareable Evidence Card with disclaimers, exports to PDF, and shares via WhatsApp with preformatted message containing evidence summary and web link
-14. Recipient opens shared web link on any device without app installation and views read-only evidence record with interactive viewer, zoom/pan functionality, and ability to verify tamper-evident hash
-15. User navigates to Evidence History, searches for \"Mustard\" evidence records, filters by date range September 2026, and opens previous evidence record showing observable visual evidence summary and quick hash verification button
+1. User opens KisanDrishti mobile app and sees dashboard displaying Dynamic SVG Animated Logo with optical lens, golden wheat sheaf, and cryptographic shield, Interactive Live Optical Scanner Animation with radar sweep, Evidence Records count, Capture Quality Pass Rate, Visual Findings count, Recent Evidence list, buttons for Interactive Evidence Showcase, Live APMC Mandi Prices, Grain Quality Calculator, Visual Grain Encyclopedia, and prominent disclaimer
+2. User taps Live APMC Mandi Prices button and views price table displaying Wheat prices from Khanna Mandi Punjab (₹2,150/quintal), Karnal Mandi Haryana (₹2,180/quintal), with MSP benchmark (₹2,125/quintal), price change indicators, and last updated timestamps
+3. User filters price table by commodity \"Mustard\" and state \"Madhya Pradesh\", views filtered results showing Indore Mandi price with trend chart displaying 7-day price movement
+4. User taps Grain Quality Calculator button, system auto-populates base price ₹2,150 from Wheat APMC Mandi data, user adjusts Broken/Damaged Material slider to 8%, Visible Discoloration slider to 2%, system calculates real-time deductions (₹86 for broken material, ₹20 for discoloration), displays final adjusted price ₹2,044/quintal with visual breakdown chart
+5. User taps Visual Grain Encyclopedia button, views commodity selection grid with seven cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana, Cotton), selects Wheat card
+6. User views Wheat encyclopedia page displaying high-resolution photo gallery (ideal quality grains, broken grains, discolored grains, foreign material examples, macro close-up), physical characteristics (grain shape: oval, color range: golden to amber, typical dimensions: 6-8mm length), quality indicators, and identification tips
+7. User taps on macro close-up photo in encyclopedia, system enables zoom and pan for detailed inspection of grain structure
+8. User returns to dashboard and taps Interactive Evidence Showcase button, views commodity selection grid displaying seven cards with APMC Mandi locations and visual findings summaries
+9. User selects Cotton commodity card and views complete production-ready evidence record including verified lot ID from authentic APMC Mandi, high-definition sample photography package (main sample photo, macro close-up of fiber structure, lot context photo), interactive spatial viewer with numbered markers, and tamper-evident SHA-256 hash
+10. User taps on \"Visible Foreign Material\" marker in showcase spatial viewer, triggering smooth zoom/pan animation to corresponding region with interactive bounding box highlight and displaying detailed Gemini explanation panel
+11. User taps Create Evidence button from dashboard, selects crop \"Soybean\", enters lot ID \"LOT-2026-093\", location \"Indore\", proceeds to capture instructions
+12. User captures main sample photo and close-up photo using smartphone camera with Interactive Live Optical Scanner Animation overlay displaying radar sweep effect, system displays photo counters and preview thumbnails, proceeds to automatic quality gate
+13. System performs quality gate checks, all checks pass, system proceeds to hybrid vision analysis with progress indicators and optical scanner animation
+14. User views Evidence Result dashboard showing observable visual evidence metrics with interactive spatial viewer, taps on numbered marker to zoom/pan into flagged observation with detailed inspection card
+15. User navigates to Tamper-Evident Evidence Record showing evidence metadata, 2 uploaded photos, SHA-256 hash, hash verification widget, and mandatory disclaimers
+16. User taps \"Export to PDF\" button, system generates PDF Evidence Certificate with KisanDrishti logo, certificate title, evidence metadata, high-resolution photo thumbnails, evidence matrix table, SHA-256 hash, QR code for web verification, and disclaimers, saves PDF to device storage
+17. User shares PDF certificate via WhatsApp, recipient receives PDF file and opens it on any device without app installation, views complete evidence certificate with all data and disclaimers
+18. User generates shareable Evidence Card with disclaimers, shares via web link, recipient opens shared link on any device and views read-only evidence record with interactive viewer, zoom/pan functionality, and ability to verify tamper-evident hash
+19. User navigates to Evidence History, searches for \"Soybean\" evidence records, filters by date range September 2026, opens previous evidence record showing observable visual evidence summary and quick hash verification button
+20. User verifies application is deployed on Vercel with proper SPA routing configuration via vercel.json, navigates between pages without server-side redirects, confirms client-side routing works correctly
 
 ---
 
@@ -939,7 +1355,7 @@ Interactive Evidence Showcase
 - Internal defect detection requiring specialized equipment
 - Nutritional value measurement
 - Official mandi grading integration
-- Financial calculation features (price estimation, rupee deduction calculation, payment processing)
+- Financial calculation features (price estimation, rupee deduction calculation, payment processing) except Interactive Grain Quality & Fair Price Impact Calculator with explicit disclaimer
 - Legal adjudication or dispute resolution mechanisms
 - Grain/object counting as primary user-facing metric or headline feature
 - Rigid 10cm × 10cm lab constraint for sample placement
@@ -948,7 +1364,7 @@ Interactive Evidence Showcase
 - Multi-user collaboration features (shared workspaces, team accounts)
 - Blockchain integration for evidence storage
 - Automated sample collection robotics
-- Real-time market price integration
+- Real-time market price integration beyond Live APMC Mandi Price Intelligence
 - Buyer/seller matching or marketplace features
 - Contract management or transaction tracking
 - Advanced statistical analysis or trend reporting across multiple evidence records
@@ -966,7 +1382,16 @@ Interactive Evidence Showcase
 - Integration with external sensors (dedicated lux meters, professional tilt sensors)
 - Automated report generation scheduling
 - Custom defect classification training
-- Expansion of Interactive Evidence Showcase beyond six major commodities
+- Expansion of Interactive Evidence Showcase beyond seven major commodities
 - Real-time collaborative evidence review sessions
-- Automated APMC Mandi data synchronization
+- Automated APMC Mandi data synchronization beyond periodic refresh
 - Historical price correlation analysis for benchmark evidence
+- Predictive price modeling or forecasting
+- Integration with commodity futures markets
+- Automated quality grading based on calculator results
+- Direct transaction or payment processing through calculator
+- User-generated content submission to Visual Grain Encyclopedia
+- Community-driven encyclopedia updates
+- Advanced animation customization options for logo and scanner
+- Multiple logo animation variants
+- User-selectable animation themes

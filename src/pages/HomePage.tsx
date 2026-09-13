@@ -23,7 +23,10 @@ import {
   Activity,
   Wheat,
   MapPin,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  SlidersHorizontal,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -33,6 +36,7 @@ import { getAllAuditRecords, getAuditTimeline } from '@/lib/storage';
 import { BENCHMARK_COMMODITIES } from '@/lib/sampleData';
 import type { AuditRecord, TimelineEvent } from '@/types/evidence';
 import { useLanguage } from '@/context/LanguageContext';
+import { OpticalScannerAnimation } from '@/components/brand/OpticalScannerAnimation';
 
 export const HomePage: React.FC = () => {
   const { t } = useLanguage();
@@ -59,75 +63,165 @@ export const HomePage: React.FC = () => {
   return (
     <div className="space-y-10 pb-16">
       
-      {/* Hero Section: Serious Agricultural Infrastructure */}
-      <section className="relative overflow-hidden rounded-2xl bg-[#134E4A] text-white p-6 sm:p-10 lg:p-12 shadow-xl border border-emerald-900">
-        <div className="relative z-10 max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-xs border border-white/20 text-xs font-mono text-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>Standardized Visual Evidence Protocol</span>
+      {/* Hero Section: Interactive Optical Scanner & Serious Agricultural Infrastructure */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0c3933] via-[#134E4A] to-[#0a231f] text-white p-6 sm:p-10 lg:p-12 shadow-2xl border border-emerald-800/80">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          
+          {/* Left Text Column (7 cols) */}
+          <div className="lg:col-span-7 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-mono text-emerald-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>Standardized Smartphone Visual Evidence Protocol</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight text-balance leading-tight text-stone-50">
+              Evidence Before Valuation. <br />
+              <span className="text-amber-300 font-normal italic">Verifiable Digital Records for Agricultural Trade.</span>
+            </h1>
+
+            <p className="text-xs sm:text-sm text-stone-200 leading-relaxed text-pretty max-w-2xl font-sans">
+              KisanDrishti establishes an open, cryptographically sealed visual record of physical crop samples using ordinary smartphone cameras—so both farmers and procurement traders inspect identical observable facts during quality negotiations.
+            </p>
+
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="bg-amber-400 hover:bg-amber-500 text-stone-950 font-bold shadow-md text-xs sm:text-sm">
+                <Link to="/audit/new">
+                  <Camera className="w-4 h-4 mr-2" />
+                  Capture Live Evidence
+                </Link>
+              </Button>
+
+              <Button asChild variant="ghost" size="lg" className="border border-white/40 text-white hover:bg-white/10 text-xs sm:text-sm">
+                <Link to="/prices">
+                  <TrendingUp className="w-4 h-4 mr-2 text-emerald-300" />
+                  Live APMC Mandi Prices
+                </Link>
+              </Button>
+
+              <Button asChild variant="ghost" size="lg" className="text-stone-300 hover:text-white hover:bg-white/5 text-xs sm:text-sm">
+                <Link to="/showcase">
+                  <Sparkles className="w-4 h-4 mr-2 text-amber-300" />
+                  6-Commodity Showcase
+                </Link>
+              </Button>
+            </div>
+
+            {/* Quick Core Pillars */}
+            <div className="pt-4 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono text-stone-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>Ordinary Smartphone</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>Observable Findings</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>Tamper-Evident SHA-256</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>Zero Cost Barrier</span>
+              </div>
+            </div>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-balance leading-tight text-stone-50">
-            Evidence Before Valuation. <br />
-            <span className="text-amber-300 font-normal italic">Standardized Visual Records for Agricultural Trade.</span>
-          </h1>
-
-          <p className="text-xs sm:text-base text-stone-200 leading-relaxed text-pretty max-w-2xl">
-            KisanDrishti does not decide what your crop is worth. It creates a standardized, cryptographic visual record of physical crop samples using ordinary smartphone cameras so both farmers and buyers negotiate on identical observable ground.
-          </p>
-
-          <div className="pt-2 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="bg-amber-400 hover:bg-amber-500 text-stone-950 font-bold shadow-md text-xs sm:text-sm">
-              <Link to="/audit/new">
-                <Camera className="w-4 h-4 mr-2" />
-                Create Evidence
-              </Link>
-            </Button>
-
-            <Button asChild variant="ghost" size="lg" className="border border-white/40 text-white hover:bg-white/10 text-xs sm:text-sm">
-              <Link to="/records">
-                <FileText className="w-4 h-4 mr-2" />
-                My Evidence Records
-              </Link>
-            </Button>
-
-            <Button asChild variant="ghost" size="lg" className="text-stone-300 hover:text-white hover:bg-white/5 text-xs sm:text-sm">
-              <Link to="/showcase">
-                <Sparkles className="w-4 h-4 mr-2 text-amber-300" />
-                Interactive Showcase
-              </Link>
-            </Button>
+          {/* Right Scanner Simulation HUD Column (5 cols) */}
+          <div className="lg:col-span-5">
+            <OpticalScannerAnimation cropName="Sharbati Wheat (Khanna Mandi)" isScanning={true} score={98} />
           </div>
 
-          {/* Quick Pillars */}
-          <div className="pt-4 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono text-stone-300">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>Standard Smartphone</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>Observable Findings</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>Tamper-Evident SHA-256</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>No Lab Fabrication</span>
-            </div>
-          </div>
         </div>
+      </section>
 
-        {/* Decorative Grid Pattern */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
-          <div className="w-full h-full grid grid-cols-6 grid-rows-6 border-l border-white/40">
-            {Array.from({ length: 36 }).map((_, i) => (
-              <div key={i} className="border border-white/30" />
-            ))}
-          </div>
-        </div>
+      {/* 3 Core Interactive Features for New Users */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        {/* Feature 1: Mandi Live Prices */}
+        <Card className="border-2 border-emerald-600/30 bg-card hover:border-emerald-600 transition-all shadow-xs group flex flex-col justify-between">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <Badge variant="outline" className="text-[10px] font-mono border-emerald-600 text-emerald-700">
+                MSP 2026-27
+              </Badge>
+            </div>
+            <CardTitle className="text-base font-bold font-serif text-foreground mt-2">
+              Live Mandi Price Intelligence
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Daily modal spot rates and government Minimum Support Price (MSP) benchmarks across major APMC trading mandis.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Button asChild size="sm" variant="ghost" className="w-full justify-between text-xs text-emerald-700 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 p-0 h-8">
+              <Link to="/prices">
+                <span>View Mandi Price Board</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Feature 2: Quality Price Impact Calculator */}
+        <Card className="border-2 border-amber-600/30 bg-card hover:border-amber-600 transition-all shadow-xs group flex flex-col justify-between">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-300 flex items-center justify-center">
+                <SlidersHorizontal className="w-5 h-5" />
+              </div>
+              <Badge variant="outline" className="text-[10px] font-mono border-amber-600 text-amber-700">
+                Fair Valuation
+              </Badge>
+            </div>
+            <CardTitle className="text-base font-bold font-serif text-foreground mt-2">
+              Grain Quality Price Calculator
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Simulate standard APMC quality deductions and sound grain premiums based on observable visual defect rates.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Button asChild size="sm" variant="ghost" className="w-full justify-between text-xs text-amber-700 dark:text-amber-400 font-bold hover:bg-amber-500/10 p-0 h-8">
+              <Link to="/calculator">
+                <span>Calculate Quality Impact</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Feature 3: Visual Grain Encyclopedia */}
+        <Card className="border-2 border-blue-600/30 bg-card hover:border-blue-600 transition-all shadow-xs group flex flex-col justify-between">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-700 dark:text-blue-300 flex items-center justify-center">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <Badge variant="outline" className="text-[10px] font-mono border-blue-600 text-blue-700">
+                7 Commodities
+              </Badge>
+            </div>
+            <CardTitle className="text-base font-bold font-serif text-foreground mt-2">
+              Visual Grain Encyclopedia
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Physical botanical characteristics, macro grain photography, and visual defect identification guidelines.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Button asChild size="sm" variant="ghost" className="w-full justify-between text-xs text-blue-700 dark:text-blue-400 font-bold hover:bg-blue-500/10 p-0 h-8">
+              <Link to="/encyclopedia">
+                <span>Explore Field Guide</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
       </section>
 
       {/* Primary Dashboard Metrics */}
@@ -238,7 +332,7 @@ export const HomePage: React.FC = () => {
               <span>Interactive Evidence Showcase & Benchmark Protocol</span>
             </h2>
             <p className="text-xs text-muted-foreground">
-              Explore authentic multi-photo visual evidence packages across 6 major Indian agricultural commodities.
+              Explore authentic multi-photo visual evidence packages across major Indian agricultural commodities.
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs border-emerald-600/40 text-emerald-700 dark:text-emerald-300">
@@ -259,21 +353,29 @@ export const HomePage: React.FC = () => {
                     alt={c.crop}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <Badge className="absolute top-2 left-2 bg-black/70 text-white font-mono text-[9px] backdrop-blur-xs border-0">
-                    {c.crop}
+                  <Badge className="absolute top-1.5 left-1.5 bg-black/80 text-amber-300 text-[9px] font-mono border-0">
+                    {c.badge}
                   </Badge>
                 </div>
-                <div className="p-3 space-y-1">
-                  <span className="font-bold text-xs text-foreground block truncate">{c.name}</span>
-                  <p className="text-[10px] text-muted-foreground font-mono truncate">{c.mandiLocation}</p>
+                
+                <div className="p-2.5 space-y-1">
+                  <span className="font-serif font-bold text-xs text-foreground block truncate">
+                    {c.name}
+                  </span>
+                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <MapPin className="w-2.5 h-2.5 text-emerald-600 shrink-0" />
+                    <span className="truncate">{c.mandiLocation}</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-stone-500 truncate">
+                    Lot: {c.lotId}
+                  </div>
                 </div>
               </div>
 
-              <div className="p-3 pt-0">
-                <Button asChild size="sm" variant="ghost" className="w-full text-[11px] h-7 bg-muted/50 hover:bg-emerald-500/10 hover:text-emerald-700 text-foreground font-semibold">
+              <div className="p-2.5 pt-0">
+                <Button asChild size="sm" variant="ghost" className="w-full text-xs h-7 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10">
                   <Link to={`/records/${c.record.id}`}>
-                    Inspect Evidence
-                    <ChevronRight className="w-3 h-3 ml-1" />
+                    Inspect Record
                   </Link>
                 </Button>
               </div>
@@ -282,163 +384,125 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Mandatory Institutional Disclaimer Banner */}
-      <section className="p-4 rounded-xl border border-emerald-800/30 bg-emerald-950/10 text-stone-800 dark:text-stone-200 text-xs space-y-2">
-        <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300 font-serif">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          <span>Institutional Integrity Ground & Legal Disclaimer:</span>
-        </div>
-        <p className="text-[11px] leading-relaxed text-stone-600 dark:text-stone-300">
-          "KisanDrishti provides visual evidence only. It does not provide official mandi grading, laboratory testing, moisture measurement, chemical analysis, or financial/legal adjudication. It does not decide what the crop is worth—it creates standardized visual evidence that both sides can inspect."
-        </p>
-        <p className="text-[11px] leading-relaxed text-stone-500 dark:text-stone-400">
-          <strong>Sample Limitation:</strong> This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.
-        </p>
-      </section>
-
-      {/* Main Grid: Recent Evidence Records & Evidence Timeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Recent Evidence Records */}
-        <div className="lg:col-span-7 space-y-4">
+      {/* Real-time Activity Timeline & Evidence Records */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left: Recent Audits (8 cols) */}
+        <div className="lg:col-span-8 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary" />
-              <h3 className="font-serif font-bold text-base text-foreground">
-                Recent Visual Evidence Records
-              </h3>
-            </div>
-            <Button asChild variant="ghost" size="sm" className="text-xs">
+            <h3 className="text-base font-bold font-serif text-foreground flex items-center gap-2">
+              <Layers className="w-4 h-4 text-emerald-600" />
+              <span>Recent Standardized Evidence Records</span>
+            </h3>
+            <Button asChild variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
               <Link to="/records">
-                View All Records
-                <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                View All ({audits.length}) <ArrowRight className="w-3 h-3 ml-1" />
               </Link>
             </Button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {audits.slice(0, 4).map((record) => (
-              <Card key={record.id} className="border border-border hover:border-primary/50 transition-all bg-card shadow-xs">
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-3">
+              <Card key={record.id} className="border border-border hover:border-emerald-600/50 transition-colors bg-card shadow-xs">
+                <CardContent className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-stone-900 shrink-0 border border-border">
                       <img
                         src={record.imageUrl}
                         alt={record.metadata.crop}
-                        className="w-14 h-14 rounded-lg object-cover border border-border shrink-0"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-sm text-foreground">
-                            {record.metadata.crop}
-                          </span>
-                          <span className="text-xs text-muted-foreground font-mono">
-                            ({record.metadata.lotId})
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground truncate max-w-[200px] sm:max-w-xs">
-                          {record.metadata.location}
-                        </p>
-                        <span className="text-[10px] font-mono text-stone-500 block">
-                          {format(new Date(record.metadata.captureTimestamp), 'dd MMM yyyy, HH:mm')}
+                    </div>
+
+                    <div className="space-y-0.5 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-serif font-bold text-sm text-foreground truncate">
+                          {record.metadata.crop}
                         </span>
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-muted text-muted-foreground border border-border">
+                          {record.metadata.lotId}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 text-[11px] text-muted-foreground font-mono">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-emerald-600" />
+                          {record.metadata.location}
+                        </span>
+                        <span>•</span>
+                        <span>{format(new Date(record.metadata.captureTimestamp), 'dd MMM, HH:mm')}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                    <div className="text-right hidden sm:block">
+                      <div className="text-[10px] font-mono text-muted-foreground">Broken / Foreign</div>
+                      <div className="text-xs font-mono font-bold text-foreground">
+                        {record.stats.brokenPercent}% / {record.stats.foreignObjectCount}
                       </div>
                     </div>
 
-                    <div className="text-right shrink-0">
-                      <Badge variant="outline" className="text-[10px] font-mono border-stone-300">
-                        {record.id}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Observable Metric Summary Strip */}
-                  <div className="grid grid-cols-3 gap-2 p-2 bg-stone-50 dark:bg-stone-900 rounded border border-border text-center font-mono text-[11px]">
-                    <div>
-                      <span className="text-[9px] text-muted-foreground block">BROKEN</span>
-                      <span className="font-bold text-amber-600 dark:text-amber-400">
-                        {record.stats.brokenPercent}%
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-muted-foreground block">DISCOLOR</span>
-                      <span className="font-bold text-orange-600 dark:text-orange-400">
-                        {record.stats.discoloredPercent}%
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-muted-foreground block">FOREIGN OBJ</span>
-                      <span className="font-bold text-red-600 dark:text-red-400">
-                        {record.stats.foreignObjectCount} {record.stats.foreignObjectCount === 1 ? 'item' : 'items'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="flex items-center justify-between pt-1 border-t border-border">
-                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <Lock className="w-3 h-3" />
-                      SHA-256 Sealed
-                    </span>
-
-                    <Button asChild size="sm" variant="ghost" className="h-7 text-xs text-primary font-medium">
+                    <Button asChild size="sm" variant="outline" className="text-xs h-8">
                       <Link to={`/records/${record.id}`}>
-                        Inspect Visual Evidence
-                        <ArrowRight className="w-3 h-3 ml-1" />
+                        Inspect Record
                       </Link>
                     </Button>
                   </div>
+
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
 
-        {/* Right Column: Evidence Activity Timeline */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Right: Verification Timeline (4 cols) */}
+        <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <h3 className="text-base font-bold font-serif text-foreground flex items-center gap-2">
               <Activity className="w-4 h-4 text-emerald-600" />
-              <h3 className="font-serif font-bold text-base text-foreground">
-                Evidence Protocol Timeline
-              </h3>
-            </div>
-            <Badge variant="outline" className="text-[10px] font-mono border-stone-300">
-              Audit Stream
-            </Badge>
+              <span>Evidence Activity Timeline</span>
+            </h3>
+            <span className="text-[10px] font-mono text-emerald-600">LIVE FEED</span>
           </div>
 
-          <Card className="border border-border bg-card shadow-xs">
-            <CardContent className="p-4 space-y-3.5">
-              {timeline.length > 0 ? (
-                timeline.slice(0, 6).map((evt, idx) => (
-                  <div key={evt.id || idx} className="flex items-start gap-3 text-xs pb-3 border-b border-border last:border-0 last:pb-0">
-                    <div className="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                      <Clock className="w-3.5 h-3.5" />
+          <Card className="border border-border bg-card p-4 space-y-3">
+            <div className="space-y-3">
+              {timeline.slice(0, 5).map((evt, idx) => (
+                <div key={idx} className="flex items-start gap-2.5 text-xs pb-3 border-b border-border/60 last:border-0 last:pb-0">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                  <div className="space-y-0.5 flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-bold text-foreground truncate">
+                        {evt.crop} (Lot {evt.lotId})
+                      </span>
+                      <span className="text-[9px] font-mono text-muted-foreground shrink-0">
+                        {format(new Date(evt.timestamp), 'dd MMM, HH:mm')}
+                      </span>
                     </div>
-                    <div className="space-y-0.5 flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-foreground truncate">
-                          {evt.crop} (Lot {evt.lotId})
-                        </span>
-                        <span className="text-[9px] font-mono text-muted-foreground shrink-0">
-                          {format(new Date(evt.timestamp), 'dd MMM, HH:mm')}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-muted-foreground leading-snug">
-                        {evt.details}
-                      </p>
-                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug">
+                      {evt.details}
+                    </p>
                   </div>
-                ))
-              ) : (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  No timeline activity recorded yet.
-                </p>
-              )}
-            </CardContent>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
-      </div>
+
+      </section>
+
+      {/* Protocol Guarantee Banner */}
+      <section className="p-4 rounded-xl border border-border bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 text-xs space-y-1 font-sans">
+        <div className="flex items-center gap-2 font-bold text-foreground">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <span>KisanDrishti Epistemic Boundaries & Disclaimer:</span>
+        </div>
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          KisanDrishti creates standardized visual records for mutual counterparty inspection. It does NOT determine commercial rupee value, official AGMARK mandi grade, or laboratory moisture/protein/chemical levels. All digital evidence packages are SHA-256 cryptographically sealed to guarantee tamper-evidence since capture.
+        </p>
+      </section>
+
     </div>
   );
 };
