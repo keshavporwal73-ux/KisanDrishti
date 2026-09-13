@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-1.5 text-muted-foreground">
               <li><Link to="/audit/new" className="hover:text-primary transition-colors">Start Physical Audit</Link></li>
               <li><Link to="/calibration-sheet" className="hover:text-primary transition-colors">Print Calibration Sheet (10cm×10cm)</Link></li>
-              <li><Link to="/demo" className="hover:text-primary transition-colors">Interactive Demo Mode</Link></li>
+              <li><Link to="/showcase" className="hover:text-primary transition-colors">Interactive Evidence Showcase</Link></li>
               <li><Link to="/records" className="hover:text-primary transition-colors">Evidence Repository</Link></li>
             </ul>
           </div>

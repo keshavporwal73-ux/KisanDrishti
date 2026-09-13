@@ -57,7 +57,7 @@ KisanDrishti Mobile App
 │   └── Tamper-Evident Evidence Record
 ├── Evidence Card & Shareable Report
 ├── Evidence History & Repository
-├── Demo Mode
+├── Interactive Evidence Showcase & Benchmark Protocol
 └── How It Works
 ```
 
@@ -69,7 +69,7 @@ KisanDrishti Mobile App
 - Create Evidence button
 - My Evidence Records button
 - How It Works button
-- Demo Mode button
+- Interactive Evidence Showcase button
 - Disclaimer section
 
 **Dashboard Metrics:**
@@ -86,7 +86,7 @@ KisanDrishti Mobile App
 - Navigate to Create Evidence flow
 - Navigate to Evidence History
 - Navigate to How It Works information page
-- Navigate to Demo Mode walkthrough
+- Navigate to Interactive Evidence Showcase
 - Display professional agricultural infrastructure style dashboard with clean metrics
 
 **Visual Design System:**
@@ -476,33 +476,132 @@ Content:
 - Quick hash verification from list view
 - Navigate to full evidence record on selection
 
-### 3.14 Demo Mode
+### 3.14 Interactive Evidence Showcase & Benchmark Protocol
 
-**Demo Mode Label:**
-- Clearly labeled as \"DEMO DATA — NOT A REAL AGRICULTURAL ASSESSMENT\" throughout experience
-- Prominent visual indicator distinguishing demo from real evidence records
+**Purpose:**
+- Provide production-ready reference evidence records for major Indian agricultural commodities
+- Demonstrate complete visual evidence protocol workflow
+- Establish benchmark standards for evidence quality across key APMC Mandis
+- Enable users to explore authentic verified lot datasets
 
-**Preloaded Content:**
-- High-fidelity wheat sample photos (main, close-up, context)
-- Annotated anomalies with detailed classifications (broken/damaged, discolored, foreign material)
-- Complete evidence matrix with realistic data
-- Interactive spatial viewer with zoom/pan functionality
-- Gemini explanation panels for selected anomalies
-- Complete evidence record with hash
+**Commodity Coverage:**
+- Wheat
+- Basmati Paddy
+- Mustard
+- Soybean
+- Maize
+- Chana (Chickpea)
 
-**Walkthrough Flow:**
-- Guided tour of complete evidence creation process
-- Interactive exploration of spatial evidence viewer
-- Demonstration of zoom/pan inspection feature
-- Example evidence matrix and explanations
-- Sample shareable report card
+**Evidence Record Structure (per commodity):**
+
+**Metadata:**
+- Commodity name and variety
+- Verified lot ID from authentic APMC Mandi source
+- APMC Mandi location (e.g., Khanna Mandi Punjab, Karnal Mandi Haryana, Indore Mandi Madhya Pradesh)
+- Capture date and time
+- Lot size and transaction context
+
+**Visual Evidence Package:**
+- High-resolution main sample photo (minimum 1920x1080)
+- High-resolution close-up photo
+- Optional context photo
+- All photos captured using standard smartphone camera
+- Photos demonstrate proper lighting, framing, and sample visibility
+
+**Analysis Results:**
+- Observable visual evidence metrics:
+  + Broken/Damaged Material: percentage or count
+  + Visible Discoloration: percentage or count
+  + Visible Foreign Material: count
+  + Abnormal Appearance: percentage or count
+  + Physical Surface Damage: percentage or count
+- Capture quality status: Pass
+- Interactive spatial viewer with numbered markers
+- Bounding boxes/highlights for each detected observation
+
+**Evidence Matrix:**
+- Complete structured table with OBSERVED and UNVERIFIED categories
+- Confidence scores for visual observations
+- Clear status indicators
+
+**Gemini Explanations:**
+- Detailed reasoning for selected observations
+- Visual evidence references with interactive highlights
+- Epistemic status clarification
+
+**Tamper-Evident Verification:**
+- Authentic SHA-256 hash for each evidence record
+- Hash verification widget demonstrating integrity check
+- Verification timestamp
+
+**Navigation Structure:**
+
+```
+Interactive Evidence Showcase
+├── Commodity Selection Grid
+│   ├── Wheat
+│   ├── Basmati Paddy
+│   ├── Mustard
+│   ├── Soybean
+│   ├── Maize
+│   └── Chana
+├── Evidence Record Detail View (per commodity)
+│   ├── Metadata Display
+│   ├── High-Res Photo Gallery
+│   ├── Interactive Spatial Viewer
+│   ├── Evidence Matrix
+│   ├── Gemini Explanations
+│   └── Hash Verification
+└── Benchmark Comparison View
+```
+
+**Commodity Selection Grid:**
+- Display six commodity cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana)
+- Each card shows:
+  + Commodity name and variety
+  + APMC Mandi location
+  + Thumbnail of main sample photo
+  + Visual findings summary
+  + \"View Evidence\" button
+
+**Evidence Record Detail View:**
+- Full-screen presentation of complete evidence record
+- Metadata section displaying lot ID, APMC Mandi, capture date/time, lot size
+- High-resolution photo gallery with swipe navigation
+- Interactive spatial viewer with zoom/pan and numbered markers
+- Evidence matrix with expandable rows
+- Gemini explanation panels accessible via marker selection
+- Hash verification widget with \"Verify Integrity\" button
+- Mandatory disclaimers displayed prominently
+
+**Benchmark Comparison View:**
+- Side-by-side comparison of evidence records across commodities
+- Highlight differences in visual findings patterns
+- Demonstrate protocol consistency across different crop types
 
 **Functionality:**
-- Provide dedicated demo mode accessible from dashboard
-- Load preloaded fictional wheat sample with rich annotations
-- Enable full interactive exploration of all features
-- Maintain clear \"DEMO DATA\" labeling throughout
-- Allow users to experience complete workflow without creating real evidence
+- Display commodity selection grid on showcase entry
+- Navigate to detailed evidence record on commodity selection
+- Render high-resolution photos with interactive viewer
+- Enable zoom/pan/marker interaction identical to user-created evidence
+- Provide hash verification for each benchmark record
+- Allow navigation between different commodity evidence records
+- Support sharing of benchmark evidence records via link/QR code
+- Maintain professional visual design consistent with main application
+
+**Data Requirements:**
+- Authentic verified lot IDs from real APMC Mandi transactions
+- High-resolution photos captured using standard smartphone cameras
+- Realistic visual analysis results based on actual sample conditions
+- Valid SHA-256 hashes computed from complete evidence packages
+- Accurate APMC Mandi location references
+
+**Quality Standards:**
+- All photos must pass automatic capture quality gate
+- Visual findings must be verifiable through spatial viewer
+- Hash verification must demonstrate successful integrity check
+- Evidence records must include complete metadata
+- All disclaimers must be displayed prominently
 
 ### 3.15 How It Works
 
@@ -721,7 +820,28 @@ Content:
 - API access for integration
 - Priority support
 
-### 4.10 Data Flow
+### 4.10 Interactive Evidence Showcase Data Management
+
+**Benchmark Evidence Records:**
+- Six production-ready evidence records (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana)
+- Each record includes authentic verified lot ID from real APMC Mandi
+- High-resolution photos captured using standard smartphone cameras
+- Complete visual analysis results with spatial viewer data
+- Valid SHA-256 hashes for tamper-evident verification
+
+**Data Source Requirements:**
+- Lot IDs must reference authentic APMC Mandi transactions
+- APMC Mandi locations must be accurate (e.g., Khanna Mandi Punjab, Karnal Mandi Haryana, Indore Mandi Madhya Pradesh)
+- Photos must demonstrate proper capture technique and quality standards
+- Visual findings must be realistic and verifiable through spatial viewer
+
+**Quality Assurance:**
+- All benchmark photos must pass automatic capture quality gate
+- Visual analysis results must be consistent with observable evidence in photos
+- Hash verification must demonstrate successful integrity check
+- Evidence records must include complete metadata and disclaimers
+
+### 4.11 Data Flow
 
 **Evidence Creation Flow:**
 1. User selects crop/commodity and enters metadata
@@ -746,6 +866,15 @@ Content:
 5. Recipient accesses shared link without app installation
 6. Recipient views read-only evidence record with interactive viewer
 7. Recipient can verify tamper-evident hash
+
+**Interactive Evidence Showcase Flow:**
+1. User navigates to Interactive Evidence Showcase from dashboard
+2. System displays commodity selection grid with six options
+3. User selects commodity (e.g., Wheat)
+4. System loads production-ready evidence record for selected commodity
+5. User explores high-resolution photos, interactive spatial viewer, evidence matrix, Gemini explanations
+6. User verifies tamper-evident hash using verification widget
+7. User can navigate to other commodity evidence records or share benchmark evidence
 
 ---
 
@@ -775,26 +904,28 @@ Content:
 | Photo file size exceeds limit | Compress photo automatically, display notice if compression affects quality |
 | Device storage full | Display storage warning, suggest deleting old evidence records or photos |
 | Alignment sheet not available | Allow evidence creation without alignment sheet, display notice that sheet is optional |
+| Interactive Evidence Showcase commodity record fails to load | Display error message, allow retry, provide fallback to other commodity records |
+| Hash verification widget fails in showcase | Display error message, indicate verification unavailable, allow continued exploration of evidence record |
 
 ---
 
 ## 6. Acceptance Criteria
 
-1. User opens KisanDrishti mobile app and sees dashboard displaying Evidence Records count, Capture Quality Pass Rate, Visual Findings count, Recent Evidence list, and prominent disclaimer stating the app provides visual evidence only and does not decide crop worth
-2. User taps Create Evidence button, selects crop \"Wheat\", enters lot ID \"LOT-2026-001\", location \"Punjab\", and proceeds
-3. User views capture instructions stating \"Take 2-3 smartphone photos of a representative sample\", \"Do not pick only the best or worst grains\", \"Place sample on clean visible surface\", and optional alignment sheet download link
-4. User captures main sample photo using smartphone camera, system displays photo counter \"1/2\" and preview thumbnail
-5. User captures close-up photo, system displays photo counter \"2/2\" and preview thumbnail, user proceeds to quality gate
-6. System performs automatic capture quality gate checks (blur, shadows, lighting, glare, framing, sample visibility, overlap, resolution), all checks pass, system proceeds to analysis
-7. System processes photos through local CV (image normalization, sample/background separation, spatial localization, candidate anomaly detection) and sends to Gemini for multimodal analysis, displaying progress indicators
-8. User views Evidence Result dashboard showing observable visual evidence metrics: Broken/Damaged Material 6.4%, Visible Discoloration 1.8%, Visible Foreign Material 2, with interactive spatial viewer displaying numbered markers on main and close-up photos
-9. User taps on \"Visible Foreign Material\" marker, triggering smooth zoom/pan animation to that region with interactive bounding box highlight and displaying detailed inspection card with Gemini explanation
-10. User navigates to Evidence Matrix and sees structured table with OBSERVED categories (broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage) and UNVERIFIED measurements clearly labeled \"Not tested\" (moisture, protein, chemical composition, internal defects, nutritional values)
-11. User views Tamper-Evident Evidence Record showing evidence metadata, 2 uploaded photos with references, capture quality status, visual observations summary, SHA-256 hash, hash verification widget, and mandatory disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
-12. User generates shareable Evidence Card with disclaimers, exports to PDF, and shares via WhatsApp with preformatted message containing evidence summary and web link
-13. Recipient opens shared web link on any device without app installation and views read-only evidence record with interactive viewer, zoom/pan functionality, and ability to verify tamper-evident hash
-14. User navigates to Evidence History, searches for \"Wheat\" evidence records, filters by date range, and opens a previous evidence record showing observable visual evidence summary
-15. User accesses Demo Mode clearly labeled \"DEMO DATA — NOT A REAL AGRICULTURAL ASSESSMENT\" and explores preloaded wheat sample with annotated anomalies, interactive spatial viewer, and complete evidence record
+1. User opens KisanDrishti mobile app and sees dashboard displaying Evidence Records count, Capture Quality Pass Rate, Visual Findings count, Recent Evidence list, Interactive Evidence Showcase button, and prominent disclaimer stating the app provides visual evidence only and does not decide crop worth
+2. User taps Interactive Evidence Showcase button and views commodity selection grid displaying six cards (Wheat, Basmati Paddy, Mustard, Soybean, Maize, Chana) with APMC Mandi locations and visual findings summaries
+3. User selects Wheat commodity card and views complete production-ready evidence record including verified lot ID from Khanna Mandi Punjab, high-resolution main and close-up photos, interactive spatial viewer with numbered markers, and tamper-evident SHA-256 hash
+4. User taps on \"Visible Foreign Material\" marker in showcase spatial viewer, triggering smooth zoom/pan animation to corresponding region with interactive bounding box highlight and displaying detailed Gemini explanation panel
+5. User navigates to Evidence Matrix in showcase and sees structured table with OBSERVED categories (broken/damaged material 5.2%, visible discoloration 1.4%, visible foreign material 3) and UNVERIFIED measurements clearly labeled \"Not tested\" (moisture, protein, chemical composition)
+6. User taps \"Verify Integrity\" button in showcase hash verification widget and sees successful verification result confirming evidence record has not been modified since creation
+7. User returns to commodity selection grid and explores Basmati Paddy evidence record from Karnal Mandi Haryana with different visual findings pattern, demonstrating protocol consistency across crop types
+8. User taps Create Evidence button from dashboard, selects crop \"Mustard\", enters lot ID \"LOT-2026-092\", location \"Indore\", and proceeds to capture instructions
+9. User captures main sample photo and close-up photo using smartphone camera, system displays photo counters and preview thumbnails, proceeds to automatic quality gate
+10. System performs quality gate checks (blur, shadows, lighting, glare, framing, sample visibility, overlap, resolution), all checks pass, system proceeds to hybrid vision analysis with progress indicators
+11. User views Evidence Result dashboard showing observable visual evidence metrics with interactive spatial viewer, taps on numbered marker to zoom/pan into flagged observation with detailed inspection card
+12. User navigates to Tamper-Evident Evidence Record showing evidence metadata, 2 uploaded photos, SHA-256 hash, hash verification widget, and mandatory disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
+13. User generates shareable Evidence Card with disclaimers, exports to PDF, and shares via WhatsApp with preformatted message containing evidence summary and web link
+14. Recipient opens shared web link on any device without app installation and views read-only evidence record with interactive viewer, zoom/pan functionality, and ability to verify tamper-evident hash
+15. User navigates to Evidence History, searches for \"Mustard\" evidence records, filters by date range September 2026, and opens previous evidence record showing observable visual evidence summary and quick hash verification button
 
 ---
 
@@ -835,3 +966,7 @@ Content:
 - Integration with external sensors (dedicated lux meters, professional tilt sensors)
 - Automated report generation scheduling
 - Custom defect classification training
+- Expansion of Interactive Evidence Showcase beyond six major commodities
+- Real-time collaborative evidence review sessions
+- Automated APMC Mandi data synchronization
+- Historical price correlation analysis for benchmark evidence

@@ -11,7 +11,8 @@ import {
   MapPin, 
   CheckCircle2,
   Camera,
-  Layers
+  Layers,
+  Lock
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -23,9 +24,9 @@ export const EvidenceRecordsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCrop, setSelectedCrop] = useState<string>('all');
 
-  const allAudits = getAuditHistory();
+  const allAudits: AuditRecord[] = getAuditHistory();
 
-  const filteredAudits = allAudits.filter(audit => {
+  const filteredAudits = allAudits.filter((audit: AuditRecord) => {
     const matchesSearch = 
       audit.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       audit.metadata.lotId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -37,7 +38,7 @@ export const EvidenceRecordsPage: React.FC = () => {
     return matchesSearch && matchesCrop;
   });
 
-  const crops = ['all', 'Wheat', 'Paddy (Rice)', 'Mustard'];
+  const crops = ['all', 'Wheat', 'Paddy (Rice)', 'Mustard', 'Soybean', 'Maize', 'Chana (Chickpea)'];
 
   return (
     <div className="space-y-6 pb-16">
@@ -49,147 +50,134 @@ export const EvidenceRecordsPage: React.FC = () => {
             Verifiable Evidence Records Repository
           </h1>
           <p className="text-xs text-muted-foreground">
-            Searchable repository of standardized agricultural produce audits with SHA-256 cryptographic seals.
+            Immutable cryptographic records of observable crop qualities captured across APMC Mandis.
           </p>
         </div>
 
-        <Button asChild size="sm" className="bg-primary text-primary-foreground text-xs shrink-0">
-          <Link to="/audit/new">
-            <Camera className="w-3.5 h-3.5 mr-1.5" />
-            New Audit
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs gap-1.5 shadow-sm">
+            <Link to="/audit/new">
+              <Camera className="w-3.5 h-3.5" />
+              <span>Create New Audit</span>
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="outline" className="text-xs gap-1.5">
+            <Link to="/showcase">
+              <Layers className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Benchmark Showcase</span>
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
         <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search by Audit ID, Lot ID, Crop, or Mandi location..."
+            placeholder="Search by Evidence ID, Lot ID, Crop, or APMC Mandi location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 text-xs h-9 bg-card"
+            className="pl-9 text-xs h-9"
           />
         </div>
 
-        {/* Crop filter chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
-          {crops.map((c) => (
-            <button
-              key={c}
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+          {crops.map((crop) => (
+            <Button
+              key={crop}
               type="button"
-              onClick={() => setSelectedCrop(c)}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-colors whitespace-nowrap ${
-                selectedCrop === c
-                  ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
-              }`}
+              variant={selectedCrop === crop ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedCrop(crop)}
+              className="text-xs h-8 capitalize shrink-0"
             >
-              {c === 'all' ? 'All Crops' : c}
-            </button>
+              {crop === 'all' ? 'All Commodities' : crop}
+            </Button>
           ))}
         </div>
       </div>
 
-      {/* Audits List */}
-      <div className="space-y-3">
-        {filteredAudits.length === 0 ? (
-          <div className="p-12 text-center border border-dashed border-border rounded-xl space-y-3">
-            <Layers className="w-10 h-10 text-muted-foreground mx-auto opacity-50" />
-            <h3 className="font-bold text-sm">No Evidence Records Found</h3>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-              No audits matched your search criteria. You can create a new audit using the 10cm×10cm calibration sheet.
-            </p>
-            <Button asChild size="sm" variant="outline" className="text-xs">
-              <Link to="/audit/new">Start New Audit</Link>
-            </Button>
-          </div>
-        ) : (
-          filteredAudits.map((audit) => (
-            <Card 
-              key={audit.id} 
-              className="border border-border bg-card shadow-xs hover:border-primary/50 transition-colors overflow-hidden"
-            >
-              <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                
-                {/* Thumbnail & Basic Info */}
-                <div className="flex items-start sm:items-center gap-4 w-full md:w-auto">
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-stone-900 shrink-0 border border-border">
+      {/* Records Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredAudits.map((audit: AuditRecord) => (
+          <Card key={audit.id} className="border border-border hover:border-emerald-600/60 transition-all bg-card shadow-xs flex flex-col justify-between">
+            <CardContent className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
                     <img
                       src={audit.imageUrl}
                       alt={audit.metadata.crop}
-                      className="w-full h-full object-cover"
+                      className="w-12 h-12 rounded-lg object-cover border border-border shrink-0"
                     />
-                    <div className="absolute top-1 left-1 bg-black/80 text-[8px] font-mono text-emerald-400 px-1 rounded">
-                      10x10cm
-                    </div>
-                  </div>
-
-                  <div className="space-y-1 flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-primary">{audit.id}</span>
-                      <Badge variant="outline" className="font-mono text-[10px]">
+                    <div>
+                      <span className="font-bold text-sm text-foreground block">
+                        {audit.metadata.crop}
+                      </span>
+                      <span className="text-[10px] font-mono text-muted-foreground block">
                         Lot: {audit.metadata.lotId}
-                      </Badge>
-                      {audit.isDemo && (
-                        <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[10px] font-mono">
-                          DEMO
-                        </Badge>
-                      )}
-                    </div>
-
-                    <h3 className="font-bold text-sm text-foreground">
-                      {audit.metadata.crop} — {audit.metadata.variety || 'Standard Sample'}
-                    </h3>
-
-                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground flex-wrap">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-stone-400" />
-                        {audit.metadata.location}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-stone-400" />
-                        {format(new Date(audit.metadata.captureTimestamp), 'dd MMM yyyy, HH:mm')}
                       </span>
                     </div>
                   </div>
+
+                  <Badge variant="outline" className="font-mono text-[10px] border-border text-foreground">
+                    {audit.id}
+                  </Badge>
                 </div>
 
-                {/* Observable Evidence Summary & Action */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto justify-end border-t md:border-t-0 pt-3 md:pt-0 border-border">
-                  
-                  {/* Observable metrics pills */}
-                  <div className="grid grid-cols-3 gap-2 text-center font-mono text-[10px] bg-muted/40 p-2 rounded-lg border border-border">
-                    <div>
-                      <span className="text-muted-foreground block text-[9px]">Broken %:</span>
-                      <span className="font-bold text-amber-700 dark:text-amber-400">{audit.stats.brokenPercent}%</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[9px]">Foreign:</span>
-                      <span className="font-bold text-red-700 dark:text-red-400">{audit.stats.foreignObjectCount} units</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[9px]">Discolor %:</span>
-                      <span className="font-bold text-orange-700 dark:text-orange-400">{audit.stats.discoloredPercent}%</span>
-                    </div>
+                <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                  <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span className="truncate">{audit.metadata.location}</span>
+                </div>
+
+                {/* Metrics strip */}
+                <div className="grid grid-cols-3 gap-1.5 p-2 rounded-lg bg-muted/40 border border-border text-center font-mono text-[10px]">
+                  <div>
+                    <span className="text-muted-foreground block text-[8px]">BROKEN</span>
+                    <span className="font-bold text-amber-600">{audit.stats.brokenPercent}%</span>
                   </div>
-
-                  <Button asChild size="sm" variant="default" className="text-xs whitespace-nowrap">
-                    <Link to={`/records/${audit.id}`}>
-                      Inspect Visual Evidence
-                      <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-                    </Link>
-                  </Button>
+                  <div>
+                    <span className="text-muted-foreground block text-[8px]">DISCOLOR</span>
+                    <span className="font-bold text-orange-600">{audit.stats.discoloredPercent}%</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block text-[8px]">SOUND</span>
+                    <span className="font-bold text-emerald-600">{audit.stats.soundGrainRatePercent}%</span>
+                  </div>
                 </div>
+              </div>
 
-              </CardContent>
-            </Card>
-          ))
-        )}
+              <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
+                <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1">
+                  <Lock className="w-3 h-3" />
+                  SHA-256 Sealed
+                </span>
+                <Button asChild size="sm" variant="ghost" className="h-7 text-xs font-medium text-emerald-600 hover:text-emerald-700">
+                  <Link to={`/records/${audit.id}`}>
+                    Inspect Visual Evidence
+                    <ArrowRight className="w-3 h-3 ml-1" />
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
+      {filteredAudits.length === 0 && (
+        <div className="text-center py-12 p-6 border border-dashed border-border rounded-xl bg-card">
+          <p className="text-sm text-muted-foreground">No evidence records matched your search filters.</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { setSearchTerm(''); setSelectedCrop('all'); }}
+            className="mt-3 text-xs"
+          >
+            Clear Filters
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

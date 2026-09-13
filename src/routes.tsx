@@ -65,7 +65,13 @@ export const routes: RouteConfig[] = [
     public: true,
   },
   {
-    name: 'Demo Mode (Interactive Demo)',
+    name: 'Interactive Evidence Showcase',
+    path: '/showcase',
+    element: <DemoPage />,
+    public: true,
+  },
+  {
+    name: 'Interactive Showcase Alias',
     path: '/demo',
     element: <DemoPage />,
     public: true,
