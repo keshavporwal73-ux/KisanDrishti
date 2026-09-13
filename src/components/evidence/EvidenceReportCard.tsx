@@ -35,7 +35,7 @@ export const EvidenceReportCard: React.FC<EvidenceReportCardProps> = ({ record }
 
         <div className="text-right font-mono text-[11px] text-emerald-400 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4" />
-          <span>SHA-256 VERIFIED</span>
+          <span>SHA-256 SEALED</span>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export const EvidenceReportCard: React.FC<EvidenceReportCardProps> = ({ record }
         {/* Core Metadata Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-stone-100 rounded-lg border border-stone-300 text-[11px] font-mono">
           <div>
-            <span className="text-stone-500 block text-[9px]">AUDIT ID:</span>
+            <span className="text-stone-500 block text-[9px]">EVIDENCE ID:</span>
             <span className="font-bold text-stone-900">{record.id}</span>
           </div>
           <div>
@@ -62,108 +62,94 @@ export const EvidenceReportCard: React.FC<EvidenceReportCardProps> = ({ record }
           </div>
         </div>
 
-        {/* Primary Observable Visual Evidence Summary (NOT grain counts) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h4 className="font-bold uppercase tracking-wider text-[11px] text-stone-800 font-mono">
-              OBSERVED VISUAL EVIDENCE (10cm × 10cm Standard Grid)
-            </h4>
-            <Badge variant="outline" className="font-mono text-[10px] border-emerald-700 text-emerald-800">
-              Non-Invasive Optical Record
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Broken %</span>
-              <span className="text-sm font-mono font-bold text-amber-700">{record.stats.brokenPercent}%</span>
-            </div>
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Foreign</span>
-              <span className="text-sm font-mono font-bold text-red-700">{record.stats.foreignObjectCount} units</span>
-            </div>
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Discolor %</span>
-              <span className="text-sm font-mono font-bold text-orange-700">{record.stats.discoloredPercent}%</span>
-            </div>
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Damage %</span>
-              <span className="text-sm font-mono font-bold text-stone-800">{record.stats.visibleDamagePercent}%</span>
-            </div>
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Coverage</span>
-              <span className="text-sm font-mono font-bold text-emerald-800">{record.stats.sampleCoveragePercent}%</span>
-            </div>
-            <div className="p-2 bg-white rounded border border-stone-300 text-center">
-              <span className="text-[10px] text-stone-500 block">Optical Q</span>
-              <span className="text-sm font-mono font-bold text-emerald-800">{record.stats.captureQualityScore}%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Matrix Snapshot */}
-        <div className="space-y-1.5 pt-1">
-          <div className="font-mono text-[11px] font-bold text-stone-800">
-            EVIDENTIARY CLASSIFICATION BREAKDOWN:
-          </div>
-          <div className="border border-stone-300 rounded overflow-hidden">
-            <div className="grid grid-cols-12 bg-stone-200 text-[10px] font-mono font-semibold text-stone-700 p-1.5">
-              <div className="col-span-5">PARAMETER / TEST</div>
-              <div className="col-span-3">OBSERVED RESULT</div>
-              <div className="col-span-4">VERIFICATION STATUS</div>
-            </div>
-            {record.matrixRows.slice(0, 6).map((row, i) => (
-              <div 
-                key={row.id} 
-                className={`grid grid-cols-12 text-[11px] p-1.5 border-t border-stone-200 ${
-                  i % 2 === 0 ? 'bg-white' : 'bg-stone-50'
-                }`}
-              >
-                <div className="col-span-5 font-medium text-stone-900">{row.parameter}</div>
-                <div className="col-span-3 font-mono font-bold text-stone-800">{row.result}</div>
-                <div className="col-span-4 font-mono text-[10px]">
-                  <span className={`px-1.5 py-0.5 rounded font-semibold ${
-                    row.status === 'OBSERVED' ? 'bg-emerald-100 text-emerald-800' :
-                    row.status === 'POSSIBLE' ? 'bg-amber-100 text-amber-800' :
-                    'bg-stone-200 text-stone-600'
-                  }`}>
-                    {row.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Explicit UNVERIFIED Laboratory Tests Box */}
-        <div className="p-2.5 bg-stone-100 rounded border border-stone-300 text-[11px] space-y-1">
-          <span className="font-bold font-mono text-[10px] text-stone-700 uppercase block">
-            EXPLICITLY UNVERIFIED PARAMETERS (Not Tested Non-Destructively):
+        {/* Observable Visual Metrics Grid */}
+        <div className="space-y-1.5">
+          <span className="font-bold uppercase tracking-wider text-[10px] text-stone-600 block">
+            Observable Visual Evidence Findings:
           </span>
-          <p className="text-stone-600">
-            Moisture %, Protein %, Chemical Residue, and Internal Fungal Endophytes are <strong>NOT TESTED</strong>. Non-destructive optical photography does not fabricate laboratory chemistry.
-          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center font-mono">
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">BROKEN / DAMAGED</span>
+              <span className="text-base font-bold text-amber-700">{record.stats.brokenPercent}%</span>
+              <span className="text-[9px] text-stone-400 block">({record.stats.brokenCount} obs)</span>
+            </div>
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">VISIBLE DISCOLORATION</span>
+              <span className="text-base font-bold text-orange-700">{record.stats.discoloredPercent}%</span>
+              <span className="text-[9px] text-stone-400 block">({record.stats.discoloredCount} obs)</span>
+            </div>
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">FOREIGN MATERIAL</span>
+              <span className="text-base font-bold text-red-700">{record.stats.foreignObjectCount}</span>
+              <span className="text-[9px] text-stone-400 block">items detected</span>
+            </div>
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">SURFACE DAMAGE</span>
+              <span className="text-base font-bold text-stone-800">{record.stats.visibleDamagePercent}%</span>
+              <span className="text-[9px] text-stone-400 block">({record.stats.visibleDamageCount} obs)</span>
+            </div>
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">SAMPLE DISPERSION</span>
+              <span className="text-base font-bold text-emerald-700">{record.stats.sampleCoveragePercent}%</span>
+              <span className="text-[9px] text-stone-400 block">Even distribution</span>
+            </div>
+            <div className="p-2.5 bg-white border border-stone-300 rounded-md">
+              <span className="text-[10px] text-stone-500 block">CAPTURE QUALITY</span>
+              <span className="text-base font-bold text-emerald-700">{record.stats.captureQualityScore}%</span>
+              <span className="text-[9px] text-emerald-700 font-bold block">GATE PASSED</span>
+            </div>
+          </div>
         </div>
 
-        {/* QR Code & Cryptographic SHA-256 Footer */}
-        <div className="p-3 bg-stone-900 text-white rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1.5 flex-1">
-            <div className="flex items-center gap-1.5 text-amber-400 font-mono text-[11px] font-semibold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>SHA-256 Cryptographic Fingerprint:</span>
+        {/* Visual Thumbnail & QR Code Strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 p-3 bg-stone-100 rounded-lg border border-stone-300 items-center">
+          <div className="sm:col-span-8 flex items-center gap-3">
+            <img
+              src={record.imageUrl}
+              alt="Audited Crop Sample"
+              className="w-20 h-20 rounded object-cover border border-stone-300 shrink-0"
+            />
+            <div className="space-y-1 text-[11px]">
+              <span className="font-bold text-stone-900 block font-serif">
+                {record.metadata.crop} — {record.metadata.variety || 'Standard Lot'}
+              </span>
+              <p className="text-stone-600 line-clamp-2">
+                Standardized smartphone capture. {record.detections.length} candidate visual observations localized on optical grid.
+              </p>
             </div>
-            <div className="font-mono text-[10px] text-stone-300 break-all bg-stone-950 p-1.5 rounded border border-stone-800">
-              {record.cryptographicHash}
-            </div>
-            <p className="text-[10px] text-stone-400 italic">
-              "KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect."
-            </p>
           </div>
 
-          <div className="shrink-0 text-center bg-white p-2 rounded border border-stone-700">
-            <QRCodeDataUrl text={shareUrl} width={80} color="#1c1917" backgroundColor="#ffffff" />
-            <span className="text-[8px] font-mono text-stone-700 block mt-1">Scan to Verify</span>
+          <div className="sm:col-span-4 flex flex-col items-center justify-center text-center border-t sm:border-t-0 sm:border-l border-stone-300 pt-2 sm:pt-0 sm:pl-3">
+            <div className="p-1 bg-white rounded border border-stone-300 mb-1">
+              <QRCodeDataUrl text={shareUrl} width={58} />
+            </div>
+            <span className="text-[9px] font-mono text-stone-500">SCAN TO VERIFY</span>
           </div>
+        </div>
+
+        {/* Cryptographic Tamper-Evident Hash */}
+        <div className="p-3 bg-stone-900 text-stone-200 rounded-lg space-y-1 font-mono text-[10px]">
+          <div className="flex items-center justify-between text-emerald-400">
+            <span className="flex items-center gap-1 font-bold">
+              <Lock className="w-3 h-3" />
+              TAMPER-EVIDENT SHA-256 HASH:
+            </span>
+            <span>Canonical JSON Hash</span>
+          </div>
+          <div className="break-all font-mono text-stone-300 bg-stone-950 p-1.5 rounded border border-stone-800">
+            {record.cryptographicHash}
+          </div>
+        </div>
+
+        {/* Mandatory Representativeness Disclaimer */}
+        <div className="p-2.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-900 space-y-0.5">
+          <span className="font-bold block">Mandatory Protocol Disclaimers:</span>
+          <p>
+            1. "This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot."
+          </p>
+          <p>
+            2. "KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect."
+          </p>
         </div>
       </CardContent>
     </Card>

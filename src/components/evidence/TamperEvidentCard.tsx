@@ -12,7 +12,8 @@ import {
   Lock, 
   RefreshCw, 
   AlertTriangle,
-  FileCheck
+  FileCheck,
+  Info
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -61,11 +62,11 @@ export const TamperEvidentCard: React.FC<TamperEvidentCardProps> = ({ record }) 
       });
 
       if (result.isValid) {
-        toast.success('Cryptographic verification PASSED: Digital record is pristine');
+        toast.success('Cryptographic verification PASSED: Digital record is pristine.');
       } else {
-        toast.error('Cryptographic verification FAILED: Tampering detected');
+        toast.error('TAMPER ALERT: Recomputed hash does not match stored seal!');
       }
-    } catch (e) {
+    } catch {
       toast.error('Verification failed');
     } finally {
       setIsVerifying(false);
@@ -73,121 +74,113 @@ export const TamperEvidentCard: React.FC<TamperEvidentCardProps> = ({ record }) 
   };
 
   return (
-    <Card className="border border-border shadow-sm">
-      <CardHeader className="pb-3 border-b border-border bg-card">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <Card className="border border-border shadow-xs bg-card">
+      <CardHeader className="bg-muted/30 pb-3 border-b border-border">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-              <Lock className="w-4 h-4" />
-            </div>
-            <div>
-              <CardTitle className="text-base font-bold font-serif text-foreground">
-                Tamper-Evident Cryptographic Seal
-              </CardTitle>
-              <p className="text-xs text-muted-foreground">
-                Deterministic SHA-256 digest calculated over the canonical visual evidence package.
-              </p>
-            </div>
+            <Lock className="w-4 h-4 text-emerald-600" />
+            <CardTitle className="text-base font-bold">
+              Tamper-Evident SHA-256 Seal
+            </CardTitle>
           </div>
-          <Badge variant="outline" className="font-mono text-[10px] text-primary border-primary/30 w-fit">
-            SHA-256 CANONICAL SEAL
+          <Badge variant="outline" className="text-[10px] font-mono border-emerald-600 text-emerald-700 dark:text-emerald-400">
+            Cryptographic Integrity
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="pt-4 space-y-4 text-xs">
         {/* Hash Display Box */}
-        <div className="p-3 bg-stone-900 text-stone-100 rounded-lg space-y-2 border border-stone-800">
-          <div className="flex items-center justify-between text-[11px] font-mono text-stone-400">
-            <span>OFFICIAL RECORD DIGEST:</span>
-            <span className="text-emerald-400 font-semibold flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Signed at Capture
-            </span>
-          </div>
-
-          <div className="p-2 bg-stone-950 rounded font-mono text-[11px] text-amber-300 break-all select-all border border-stone-800">
-            {record.cryptographicHash}
-          </div>
-
-          <div className="flex items-center justify-between pt-1">
-            <span className="text-[10px] font-mono text-stone-400">
-              Algorithm: SHA-256 (256-bit Hex)
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[11px] text-muted-foreground uppercase">
+              Canonical Evidence Package Hash:
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleCopyHash}
-              className="h-7 text-xs border border-white/20 text-white hover:bg-white/10"
+              className="h-6 px-2 text-[11px] gap-1"
             >
-              {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
-              {copied ? 'Copied' : 'Copy Hash'}
+              {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+              <span>Copy</span>
             </Button>
+          </div>
+
+          <div className="p-3 bg-stone-900 text-stone-200 rounded-lg font-mono text-[11px] break-all border border-stone-800 select-all leading-relaxed">
+            {record.cryptographicHash}
           </div>
         </div>
 
-        {/* Verification Controls */}
-        <div className="space-y-3 pt-1">
-          <div className="flex flex-col sm:flex-row items-center gap-2">
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => handleRunVerification(false)}
-              disabled={isVerifying}
-              className="w-full sm:w-auto text-xs"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isVerifying ? 'animate-spin' : ''}`} />
-              Verify Digital Integrity
-            </Button>
+        {/* Verification Trigger Actions */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <Button
+            size="sm"
+            onClick={() => handleRunVerification(false)}
+            disabled={isVerifying}
+            className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white gap-1.5 h-8"
+          >
+            {isVerifying ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <ShieldCheck className="w-3.5 h-3.5" />
+            )}
+            <span>Verify Digital Hash Now</span>
+          </Button>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleRunVerification(true)}
-              disabled={isVerifying}
-              className="w-full sm:w-auto text-xs text-muted-foreground hover:text-foreground"
-            >
-              <AlertTriangle className="w-3.5 h-3.5 mr-1.5 text-amber-600" />
-              Simulate Post-Capture Tamper Test
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleRunVerification(true)}
+            disabled={isVerifying}
+            className="text-xs border-amber-300 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 gap-1.5 h-8"
+          >
+            <AlertTriangle className="w-3.5 h-3.5" />
+            <span>Simulate Altered Record Test</span>
+          </Button>
+        </div>
 
-          {/* Verification Result Display */}
-          {verificationResult && verificationResult.tested && (
-            <div
-              className={`p-3 rounded-lg border text-xs space-y-1.5 ${
-                verificationResult.isValid
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
-                  : 'bg-red-500/10 border-red-500/30 text-red-900 dark:text-red-200'
-              }`}
-            >
-              <div className="flex items-center gap-2 font-bold text-sm">
-                {verificationResult.isValid ? (
-                  <>
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>INTEGRITY VERIFIED: Pristine Original Record</span>
-                  </>
-                ) : (
-                  <>
-                    <ShieldAlert className="w-4 h-4 text-red-600" />
-                    <span>TAMPER DETECTED: Data package modified since capture</span>
-                  </>
-                )}
-              </div>
-
-              <div className="font-mono text-[10px] space-y-0.5">
-                <div>Recorded Hash: {verificationResult.recordedHash.slice(0, 32)}...</div>
-                <div>Computed Hash: {verificationResult.computedHash.slice(0, 32)}...</div>
-              </div>
+        {/* Verification Result Banner */}
+        {verificationResult && (
+          <div
+            className={`p-3.5 rounded-lg border text-xs space-y-1.5 ${
+              verificationResult.isValid
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
+                : 'bg-red-500/10 border-red-500/30 text-red-900 dark:text-red-200'
+            }`}
+          >
+            <div className="flex items-center gap-2 font-bold">
+              {verificationResult.isValid ? (
+                <>
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Digital Record Pristine (Hash Match)</span>
+                </>
+              ) : (
+                <>
+                  <ShieldAlert className="w-4 h-4 text-red-600" />
+                  <span>Tamper Detected: Recomputed Hash Mismatch!</span>
+                </>
+              )}
             </div>
-          )}
-        </div>
+            <p className="text-[11px] leading-relaxed">
+              {verificationResult.isValid
+                ? 'All spatial markers, observable visual defect percentages, timestamp, and crop metadata exactly match the original recorded cryptographic payload.'
+                : 'The evidence package content has been altered since the original recording. The recomputed hash differs from the seal.'}
+            </p>
+          </div>
+        )}
 
-        {/* Epistemic disclaimer for cryptographic hashing */}
-        <div className="p-3 rounded-lg bg-muted/40 border border-border text-[11px] text-muted-foreground space-y-1">
-          <span className="font-semibold text-foreground block">Epistemic Scope of Hash:</span>
-          <p>
-            The SHA-256 hash guarantees that the digital findings have not been altered after capture. It proves record integrity; it does not guarantee that the physical sample was representative of the whole field.
+        {/* Clear Explanation of Tamper-Evident Limitations */}
+        <div className="p-3 rounded-lg border border-border bg-stone-50 dark:bg-stone-900 text-[11px] text-muted-foreground space-y-1.5">
+          <span className="font-semibold text-foreground flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-primary" />
+            Important Definition: "Tamper-Evident", NOT "Immutable"
+          </span>
+          <p className="leading-relaxed">
+            The SHA-256 hash ensures that any digital modification to the record (such as altering defect percentages or crop IDs) is immediately detectable. 
+          </p>
+          <p className="leading-relaxed font-medium text-stone-700 dark:text-stone-300">
+            <strong>Limitation:</strong> The hash proves that the digital evidence has not changed since capture; it does <em>not</em> prove that the photographed sample was representative of the entire truckload or truthfully selected.
           </p>
         </div>
       </CardContent>

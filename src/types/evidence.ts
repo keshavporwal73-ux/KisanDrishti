@@ -15,7 +15,7 @@ export type DefectCategory =
   | 'broken_grain' 
   | 'discolored_shriveled' 
   | 'visible_physical_damage'
-  | 'weevil_hole_candidate' 
+  | 'abnormal_appearance' 
   | 'immature' 
   | 'sound_sample';
 
@@ -35,6 +35,7 @@ export interface DetectionMarker {
   estimatedSizeMm: number;
   isHighPriorityAnomaly: boolean;
   colorHex?: string;
+  photoSource?: 'main' | 'closeUp' | 'context';
 }
 
 export interface EvidenceMatrixRow {
@@ -57,6 +58,37 @@ export interface GeminiExplanation {
   markerId?: number;
 }
 
+export interface CaptureQualityCheck {
+  id: string;
+  name: string;
+  passed: boolean;
+  detail: string;
+  tip: string;
+}
+
+export interface CaptureQualityGateResult {
+  passed: boolean;
+  score: number; // 0 to 100
+  checks: {
+    blur: CaptureQualityCheck;
+    shadows: CaptureQualityCheck;
+    lighting: CaptureQualityCheck;
+    glare: CaptureQualityCheck;
+    framing: CaptureQualityCheck;
+    sampleVisibility: CaptureQualityCheck;
+    overlap: CaptureQualityCheck;
+    resolution: CaptureQualityCheck;
+  };
+  failureReasons: string[];
+  correctiveGuidance: string[];
+}
+
+export interface CapturedPhotos {
+  main: string;
+  closeUp: string;
+  context?: string;
+}
+
 export interface AuditSessionMetadata {
   auditId: string;
   lotId: string;
@@ -64,11 +96,12 @@ export interface AuditSessionMetadata {
   variety?: string;
   location: string;
   buyerRef?: string;
-  sampleSizeGrams: number;
+  sampleDescription?: string;
   captureTimestamp: string;
   deviceInfo?: string;
   sessionToken: string;
   analysisVersion: string;
+  hasOptionalSheetUsed?: boolean;
 }
 
 export interface AuditSummaryStats {
@@ -81,12 +114,13 @@ export interface AuditSummaryStats {
   foreignObjectPercent: number;     // e.g. 0.5%
   visibleDamagePercent: number;     // e.g. 1.2%
   visibleDamageCount: number;
-  sampleCoveragePercent: number;    // e.g. 94% on 10x10cm target
+  abnormalAppearanceCount: number;  // e.g. 1
+  sampleCoveragePercent: number;    // e.g. 94%
   captureQualityScore: number;      // e.g. 96%
   approximateAverageLengthMm: number;// e.g. 6.8 mm
   opticalColorDistribution: string; // e.g. "Amber Golden (580nm) - 91% Uniform"
   
-  // Internal CV pipeline normalization only (NOT primary headline)
+  // Internal CV normalization metadata (NOT primary headline)
   totalObjects: number;
   totalFlaggedObservations: number;
   soundGrainRatePercent: number;
@@ -95,13 +129,27 @@ export interface AuditSummaryStats {
 export interface AuditRecord {
   id: string;
   metadata: AuditSessionMetadata;
-  imageUrl: string;
+  imageUrl: string; // primary main photo for backward compat
+  photos?: CapturedPhotos; // multi-photo set (main, close-up, optional context)
   stats: AuditSummaryStats;
   detections: DetectionMarker[];
   matrixRows: EvidenceMatrixRow[];
   explanations: GeminiExplanation[];
   cryptographicHash: string;
+  qualityGate?: CaptureQualityGateResult;
   isDemo?: boolean;
   isConfidenceSufficient?: boolean;
   fallbackWarningMessage?: string;
+  shareCount?: number;
+  verifiedAt?: string;
+}
+
+export interface TimelineEvent {
+  id: string;
+  auditId: string;
+  timestamp: string;
+  lotId: string;
+  crop: CropType;
+  action: 'EVIDENCE_CREATED' | 'HASH_VERIFIED' | 'SHARED_WHATSAPP' | 'PDF_EXPORTED' | 'QR_ACCESSED';
+  details: string;
 }

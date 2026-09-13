@@ -7,13 +7,15 @@
 **Tagline:** Evidence Before Valuation
 
 **Description:**
-KisanDrishti is a mobile-first web application that provides a Tamper-Evident Visual Evidence Protocol for agricultural produce transactions. It is NOT an AI crop-grading authority or a grain-counting application. The application creates standardized visual records of physical crop samples, enabling farmers and buyers to reference the same observable evidence during quality-based negotiations. It addresses the problem of arbitrary quality deductions by establishing a transparent, verifiable visual documentation system.
+KisanDrishti is a low-cost smartphone-based mobile application that provides a Tamper-Evident Visual Evidence Protocol for agricultural produce transactions. It is NOT an AI crop-price predictor, NOT a laboratory, NOT an official grading authority, and NOT an expensive inspection machine. The application creates standardized visual records of physical crop samples using ordinary smartphone cameras, enabling farmers and buyers to reference the same observable evidence during quality-based negotiations. It addresses the problem of arbitrary quality deductions by establishing a transparent, verifiable visual documentation system.
 
 **Core Product Positioning:**
-- Visual evidence protocol, not a grading authority or counting tool
+- Low-cost smartphone-based visual evidence protocol
+- Does not require specialized cameras, spectrometers, IoT sensors, laboratory equipment, paid hardware, or expensive physical kits
+- Visual evidence protocol, not a grading authority or price predictor
 - Does not provide official mandi grading, laboratory testing, moisture measurement, chemical analysis, or financial/legal adjudication
 - Provides observable visual evidence only
-- Does not decide what the crop is worth—it creates standardized visual evidence that both sides can inspect
+- Central promise: \"Don't tell both sides what the crop is worth. Give both sides the same visual evidence to inspect.\"
 
 ---
 
@@ -23,12 +25,15 @@ KisanDrishti is a mobile-first web application that provides a Tamper-Evident Vi
 - Farmers selling agricultural produce
 - Buyers/traders purchasing crops
 - Agricultural intermediaries involved in quality assessment
+- Enterprise/procurement teams managing bulk evidence
+- Warehouses requiring standardized visual documentation
 
 **Core Usage Scenarios:**
 - Pre-transaction documentation: Farmers capture visual evidence of crop samples before negotiation
 - Dispute prevention: Both parties reference the same visual record during quality discussions
 - Transaction transparency: Creating verifiable evidence of sample condition at time of capture
 - Historical reference: Maintaining records of past transactions for comparison
+- Bulk evidence management: Enterprise users managing multiple evidence records
 
 ---
 
@@ -37,19 +42,18 @@ KisanDrishti is a mobile-first web application that provides a Tamper-Evident Vi
 ### Page Hierarchy
 
 ```
-KisanDrishti Web App
+KisanDrishti Mobile App
 ├── Home / Dashboard
-├── Start New Audit
-│   ├── Audit Information Entry
-│   ├── Sample Preparation Checklist
-│   ├── Physical Calibration Sheet
-│   ├── Enhanced Capture Screen with Live Camera Feed
-│   ├── Pre-Validation Quality Checks
-│   ├── Failure Detection & Recapture Guidance
+├── Create Evidence
+│   ├── Crop/Commodity Selection
+│   ├── Capture Instructions
+│   ├── Photo Capture (2-3 photos)
+│   ├── Automatic Capture Quality Gate
+│   ├── Quality Failure & Recapture Guidance
 │   ├── Hybrid Vision Analysis
-│   ├── Live Audit Result & Interactive Spatial Evidence Viewer
+│   ├── Evidence Result & Interactive Spatial Viewer
 │   ├── Evidence Matrix
-│   ├── Gemini Multimodal Explanation Panel
+│   ├── Gemini Explanation Panel
 │   └── Tamper-Evident Evidence Record
 ├── Evidence Card & Shareable Report
 ├── Evidence History & Repository
@@ -62,18 +66,28 @@ KisanDrishti Web App
 **Elements:**
 - KisanDrishti logo and name display
 - Tagline: \"Evidence Before Valuation\"
-- Start New Audit button
+- Create Evidence button
 - My Evidence Records button
 - How It Works button
 - Demo Mode button
 - Disclaimer section
 
+**Dashboard Metrics:**
+- Evidence Records: total count of created evidence records
+- Capture Quality Pass Rate: percentage of captures passing quality gate
+- Visual Findings: count of records with observable visual findings
+- Unverified Findings: count of findings requiring laboratory confirmation
+- Evidence Shared: count of shared evidence records
+- Recent Evidence: list of most recent evidence records
+- Evidence Timeline: chronological view of evidence creation activity
+
 **Functionality:**
 - Display clear disclaimer: \"KisanDrishti provides visual evidence only. It does not provide official mandi grading, laboratory testing, moisture measurement, chemical analysis, or financial/legal adjudication. It does not decide what the crop is worth—it creates standardized visual evidence that both sides can inspect.\"
-- Navigate to Start New Audit flow
+- Navigate to Create Evidence flow
 - Navigate to Evidence History
 - Navigate to How It Works information page
 - Navigate to Demo Mode walkthrough
+- Display professional agricultural infrastructure style dashboard with clean metrics
 
 **Visual Design System:**
 - Color palette: deep green/agricultural tones (#134E4A, #1B4D3E, emerald, dark forest)
@@ -86,257 +100,217 @@ KisanDrishti Web App
 - No unnecessary gradients
 - Clean professional appearance
 
-### 3.2 Start New Audit - Audit Information Entry
+### 3.2 Create Evidence - Crop/Commodity Selection
 
 **Input Fields:**
-- Crop (dropdown/selection): Wheat, Paddy/Rice, Mustard, Soybean, Maize, Cotton, Chana/Chickpea, etc.
+- Crop/Commodity (dropdown/selection): Wheat, Paddy/Rice, Mustard, Soybean, Maize, Cotton, Chana/Chickpea, etc.
 - Variety (optional text field)
 - Lot ID (text field)
 - Location (text field)
 - Buyer/transaction reference (optional text field)
-- Sample size (selection): 100g, 250g, 500g, etc.
 - Date/time (automatically recorded)
 
 **Functionality:**
-- Collect audit metadata
+- Collect evidence metadata
 - Auto-capture current date and time
-- Proceed to Sample Preparation Checklist
+- Proceed to Capture Instructions
 
-### 3.3 Sample Preparation Checklist
+### 3.3 Capture Instructions
 
-**Interactive Checklist Items:**
-- Clean grid surface (no dust or debris)
-- Even spread of sample without clusters or piles
-- Ambient daylight or adequate lighting
-- Camera positioned perpendicular to grid
-- Sample placed within marked 10cm × 10cm boundary
-- All alignment markers visible
+**Instruction Content:**
+- \"Take 2-3 smartphone photos of a representative sample\"
+- \"Do not pick only the best or worst grains—capture a typical portion of the lot\"
+- \"Place sample on a clean, visible surface with good lighting\"
+- \"Optional: Use a low-cost printed alignment sheet/mat to help with framing, scale, and color reference (strictly optional, not a rigid lab constraint)\"
+- \"Do not arrange or count individual grains\"
 
-**Functionality:**
-- Display interactive checklist with checkboxes
-- Allow users to mark items as completed
-- Provide visual guidance for each checklist item
-- Proceed to Physical Calibration Sheet display after checklist review
+**Photo Requirements:**
+- Main sample photo: overall view of sample
+- Close-up photo: detailed view of sample
+- Optional wider/context photo: surrounding context
 
-### 3.4 Physical Calibration Sheet
-
-**Visual Interactive Representation:**
-- Display interactive visual representation of calibration sheet
-- Show 10 cm × 10 cm sample boundary
-- Display measurement/grid markings (1mm / 1cm ticks)
-- Show RGB/CMYK-style reference color patches
-- Display alignment markers (corner fiducials / ArUco-like targets)
-- Show unique QR/session identifier
-
-**Printable/Downloadable Sheet:**
-- Provide A4 calibration sheet download option
-- Include all visual elements: sample boundary, grid markings, color patches, alignment markers, QR identifier
-
-**Instructions:**
-- Display clear instruction: \"Place a representative sample inside the marked area. Capture the entire sample without intentionally selecting only visually favorable grains.\"
-- Do NOT claim that the sheet guarantees representative sampling
+**Optional Alignment Sheet/Mat:**
+- Low-cost printed sheet available for download
+- Helps with framing, scale, and color reference only
+- Not a rigid 10cm × 10cm lab constraint
+- Not required for evidence creation
 
 **Functionality:**
-- Generate unique session identifier for each audit
-- Provide download/print functionality for calibration sheet
-- Proceed to Enhanced Capture Screen
+- Display clear capture instructions
+- Provide optional alignment sheet download link
+- Proceed to Photo Capture
 
-### 3.5 Enhanced Capture Screen with Live Camera Feed
+### 3.4 Photo Capture (2-3 photos)
 
-**Live Camera Feed Interface:**
-- Real-time camera stream display
-- Sample boundary overlay matching calibration sheet dimensions
-- Alignment indicators
-- Live lighting/lux meter display
-- Live tilt sensor/gyroscope reading display
-- Canvas snapshot capture button
-- Switch camera button (front/rear)
-- Fallback to file upload option
-- Fallback to preset sample images option
+**Capture Interface:**
+- Camera viewfinder with simple framing guide
+- Capture button for each required photo
+- Photo counter (1/2, 2/2, or 1/3, 2/3, 3/3)
+- Retake button for each photo
+- Preview thumbnail for captured photos
 
-**Real-Time Quality Indicators:**
-- Lighting level (lux estimate) with color-coded status (red/amber/green)
-- Angle/tilt deviation display with numerical degree reading
-- Grid alignment detection status
-- Focus/sharpness indicator
-- Overall quality score display
-
-**Capture Actions:**
-- Capture Evidence button (takes canvas snapshot from live stream)
-- Retake button
-- Upload image button (fallback)
-- Select preset sample button (fallback)
+**Photo Sequence:**
+1. Main sample photo
+2. Close-up photo
+3. Optional wider/context photo
 
 **Functionality:**
-- Access device camera for live real-time stream
-- Display live camera feed with overlay guides
-- Continuously monitor and display lighting level (lux)
-- Continuously monitor and display tilt/angle using device gyroscope
-- Provide real-time warnings if quality indicators are suboptimal
-- Capture high-resolution canvas snapshot from live stream
-- Allow retake if user is unsatisfied
-- Support image upload via drag & drop or file selection as fallback
-- Provide preset sample images as fallback option
-- Proceed to Pre-Validation Quality Checks
+- Access device camera for photo capture
+- Capture 2-3 photos in sequence
+- Allow retake for any photo
+- Display preview thumbnails
+- Proceed to Automatic Capture Quality Gate after all photos captured
 
-### 3.6 Pre-Validation Quality Checks
+### 3.5 Automatic Capture Quality Gate
 
-**Automated Quality Validation:**
-- Brightness check (detect underexposure or overexposure)
-- Contrast check (ensure sufficient detail visibility)
-- Grid alignment detection (verify calibration markers are detected)
-- Blur detection (assess image sharpness)
-- Tilt validation (verify angle is within acceptable range)
+**Quality Checks:**
+- Blur detection: assess image sharpness
+- Shadow detection: identify excessive shadows
+- Lighting assessment: evaluate exposure level
+- Glare detection: identify overexposed regions
+- Framing check: verify sample is within frame
+- Sample visibility: ensure sample is clearly visible
+- Overlap check: verify photos show different views
+- Resolution check: ensure sufficient image resolution
 
-**Validation Results:**
-- Pass: Proceed to Hybrid Vision Analysis
-- Fail: Proceed to Failure Detection & Recapture Guidance
+**Quality Gate Logic:**
+- Pass: All quality checks meet minimum thresholds
+- Fail: One or more quality checks below threshold
 
 **Functionality:**
-- Perform automated quality checks on captured image
-- Evaluate brightness, contrast, grid alignment, blur, tilt
-- Determine pass/fail status for each check
-- Route to appropriate next step based on validation results
+- Perform automated quality checks on all captured photos
+- Evaluate blur, shadows, lighting, glare, framing, sample visibility, overlap, resolution
+- Determine pass/fail status
+- If pass: Proceed to Hybrid Vision Analysis
+- If fail: Proceed to Quality Failure & Recapture Guidance
 
-### 3.7 Failure Detection & Recapture Guidance
+### 3.6 Quality Failure & Recapture Guidance
 
 **Failure Screen Display:**
-- Prominent message: \"Reliable visual evidence could not be established. Please recapture the sample under better conditions.\"
+- Prominent message: \"Capture quality insufficient. Please recapture the sample.\"
 - Specific failure reasons listed:
-  + Severe tilt detected (angle > X degrees)
-  + Underexposure (insufficient lighting)
-  + Overexposure (excessive lighting)
-  + Grid not found (alignment markers not detected)
-  + Blurry image (insufficient sharpness)
-  + Poor contrast (detail not visible)
+  + Blurry image detected
+  + Excessive shadows detected
+  + Poor lighting (underexposure or overexposure)
+  + Glare detected
+  + Sample not properly framed
+  + Sample not clearly visible
+  + Photos too similar (insufficient overlap)
+  + Resolution too low
 
 **Corrective Guidance:**
 - Specific tips for each detected failure:
-  + Tilt: \"Hold camera directly above grid, parallel to surface\"
-  + Underexposure: \"Move to brighter location or add lighting\"
-  + Overexposure: \"Reduce direct light or move to shaded area\"
-  + Grid not found: \"Ensure all corner markers are visible in frame\"
-  + Blur: \"Hold camera steady and ensure focus before capture\"
-  + Contrast: \"Improve lighting conditions for better detail\"
+  + Blur: \"Hold phone steady and ensure focus before capture\"
+  + Shadows: \"Move to location with even lighting, avoid direct shadows\"
+  + Poor lighting: \"Improve lighting conditions or move to brighter location\"
+  + Glare: \"Reduce direct light or adjust angle to avoid reflections\"
+  + Framing: \"Ensure entire sample is visible within frame\"
+  + Visibility: \"Place sample on clean, contrasting surface\"
+  + Overlap: \"Capture different views (overall, close-up, context)\"
+  + Resolution: \"Move closer or use higher resolution camera setting\"
 
 **Recapture Action:**
-- \"Recapture with Corrected Settings\" button (1-click action)
-- Returns to Enhanced Capture Screen with guidance displayed
+- \"Recapture Photos\" button
+- Returns to Photo Capture with guidance displayed
 
 **Functionality:**
-- Display explicit failure screen when quality checks fail
+- Display explicit failure screen when quality gate fails
 - List specific failure reasons detected
 - Provide actionable corrective guidance for each failure
-- Enable immediate recapture with one-click action
-- Return to Enhanced Capture Screen with persistent guidance tips
+- Enable immediate recapture
+- Return to Photo Capture with persistent guidance tips
 
-### 3.8 Hybrid Vision Analysis
+### 3.7 Hybrid Vision Analysis
 
 **Architecture Components:**
 
 **Local Computer Vision Processing:**
 - Image normalization
-- Calibration-grid detection
-- Contour segmentation
-- Object detection (used internally when necessary, not exposed as primary metric)
-- Spatial coordinates extraction
+- Sample/background separation
+- Quality checks
+- Spatial localization
+- Candidate anomaly region detection
 - Bounding boxes/masks generation
 
 **Gemini Multimodal Analysis:**
-- Anomaly reasoning
-- Visual defect classification: shriveled, discolored, broken, foreign objects, weed seeds, stones/inorganic
-- Contextual explanation of selected patches
-
-**Analysis Modes:**
-- Mock/local algorithmic analysis with rich realistic wheat/grain preset samples
-- Dynamic upload analysis with interactive spatial coordinates
+- Visual reasoning and classification
+- Anomaly explanation
+- Visual defect categorization: broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage
+- Contextual explanation of selected regions
 
 **Feature Categorization:**
-- OBSERVED: visually detected/countable features (broken/damaged candidates, discoloration candidates, foreign objects, visible physical damage, approximate visual size/color characteristics where technically reliable)
+- OBSERVED: visually detected features (broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage)
 - POSSIBLE: visual interpretation requiring confirmation
 - UNVERIFIED: measurements requiring laboratory/professional equipment
 
+**Strictly Forbidden:**
+- Moisture percentage
+- Protein percentage
+- Chemical contamination measurements
+- Pesticide residue measurements
+- Internal defects
+- Nutritional values
+- Laboratory measurements
+- Rupee deductions or price calculations
+
 **Constraints:**
-- NEVER fabricate actual laboratory measurements
+- NEVER fabricate laboratory measurements
 - Explicitly categorize every feature according to verification status
-- If vision system cannot confidently segment or analyze the sample, display: \"Reliable visual evidence could not be established. Please recapture the sample under better conditions.\"
+- If vision system cannot confidently analyze sample, display: \"Reliable visual evidence could not be established. Please recapture the sample.\"
 - Do NOT invent results when confidence is low
 
 **Functionality:**
-- Process captured image through local CV pipeline
-- Send image to Gemini for multimodal analysis
-- Detect and classify anomalies (broken/damaged, discolored, foreign objects)
+- Process captured photos through local CV pipeline
+- Send photos to Gemini for multimodal analysis
+- Detect and classify observable anomalies
 - Generate spatial coordinates for each detected anomaly
 - Create bounding boxes/masks for visualization
 - Categorize all findings as OBSERVED, POSSIBLE, or UNVERIFIED
-- Proceed to Live Audit Result display
+- Proceed to Evidence Result display
 
-### 3.9 Live Audit Result & Interactive Spatial Evidence Viewer
-
-**High-Impact Visual Evidence Dashboard:**
+### 3.8 Evidence Result & Interactive Spatial Viewer
 
 **Summary Metrics Display (Observable Visual Evidence):**
-- Broken/Damaged Candidates: percentage (e.g., 6.4%)
-- Discoloration Candidates: percentage (e.g., 1.8%)
-- Foreign Objects: count (e.g., 2)
-- Visible Physical Damage: percentage or count where applicable
-- Sample Coverage Quality: indicator
-- Capture Quality Score: indicator
-
-**Observable Defect Severity Breakdown:**
-- Critical Visual Defects: count and percentage (e.g., severe breakage, large foreign objects)
-- Minor Visual Defects: count and percentage (e.g., slight discoloration, small chips)
-
-**Note:** Object/grain counting is used internally by the CV pipeline when necessary but is NOT presented as a primary dashboard metric or headline feature.
+- Broken/Damaged Material: percentage or count
+- Visible Discoloration: percentage or count
+- Visible Foreign Material: count
+- Abnormal Appearance: percentage or count
+- Physical Surface Damage: percentage or count
+- Capture Quality Status: pass/fail indicator
 
 **Interactive Spatial Viewer:**
-- Display original sample image
-- Overlay interactive spatial bounding boxes / pin markers / masks for flagged observations
+- Display captured photos (main, close-up, optional context)
+- Overlay interactive spatial bounding boxes/pin markers/masks for flagged observations
 - Number each detected anomaly with marker
-- Provide interactive filtering by category: All, Foreign Objects, Broken/Damaged, Discolored, Visible Damage, Critical Defects, Minor Defects
+- Provide interactive filtering by category: All, Foreign Material, Broken/Damaged, Discoloration, Abnormal Appearance, Surface Damage
 
 **Primary Feature - Interactive Zoom & Pan:**
 - Tap on numbered marker or metric to trigger smooth zoom and pan into corresponding region
 - Highlight selected observation
 - Display detailed inspection card for selected observation
 - Show observation-specific analysis and classification
-- Every finding must link back to the original captured image with interactive bounding box/highlight
-
-**Anomaly Measurement Ruler Tool:**
-- Enable ruler tool mode
-- Allow users to click two points on the 10cm × 10cm grid
-- Calculate and display millimeter distance between points
-- Overlay measurement line with distance label
-- Reference grid markings for accurate measurement
-
-**Side-by-Side Comparison Tool:**
-- Select comparison mode
-- Choose comparison target: historical lot audit or baseline grade standard
-- Display current audit and comparison target side-by-side
-- Highlight differences in observable visual evidence metrics
-- Show comparative summary (e.g., \"Broken/Damaged: Current 6.4% vs Historical 4.2%\")
+- Every finding must link back to the original captured photo with interactive bounding box/highlight
 
 **Multi-Language Toggle:**
 - Language selector: English, Hindi, Punjabi
 - Apply selected language to all UI text and labels
 - Maintain language preference across session
 
-**Disclaimer Display:**
-- Prominent disclaimer: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
+**Mandatory Disclaimer Display:**
+- Prominent disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
+- Additional disclaimer: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
 
 **Functionality:**
-- Render high-resolution sample image with overlays
-- Enable category-based filtering of visible markers including severity breakdown
+- Render captured photos with overlays
+- Enable category-based filtering of visible markers
 - Implement smooth zoom/pan animation on marker selection
 - Display contextual inspection cards for individual observations
 - Allow navigation between detected observations
-- Enable ruler tool for millimeter distance measurement on grid
-- Provide side-by-side comparison with historical audits or baseline standards
 - Support multi-language toggle (English, Hindi, Punjabi)
-- Display epistemic humility disclaimer prominently
+- Display mandatory disclaimers prominently
 - Proceed to Evidence Matrix view
 
-### 3.10 Evidence Matrix
+### 3.9 Evidence Matrix
 
 **Table Structure:**
 
@@ -349,23 +323,19 @@ Columns:
 **Content Categories:**
 
 **OBSERVED VISUAL EVIDENCE:**
-- Broken/damaged candidates: percentage
-- Foreign object candidates: count
-- Discoloration candidates: percentage
-- Visible physical damage: percentage or count
-- Critical visual defects: count and percentage
-- Minor visual defects: count and percentage
-- Approximate visual size characteristics (where technically reliable)
-- Approximate color characteristics (where technically reliable)
-- Sample coverage quality
-- Capture quality score
+- Broken/damaged material: percentage or count
+- Visible foreign material: count
+- Visible discoloration: percentage or count
+- Abnormal appearance: percentage or count
+- Physical surface damage: percentage or count
+- Capture quality status
 
 **UNVERIFIED Evidence Items (explicitly included):**
 - Moisture: Not tested
 - Protein: Not tested
-- Internal fungal contamination: Not tested
+- Internal defects: Not verified
 - Chemical composition / pesticide residue: Not tested
-- Falling number / gluten: Not tested
+- Nutritional values: Not tested
 - Internal contamination: Not verified
 
 **Constraints:**
@@ -381,48 +351,55 @@ Columns:
 - Explicitly list unverified measurements with \"Not tested\" or \"Not verified\" status
 - Allow navigation to Gemini Explanation Panel for detailed reasoning
 
-### 3.11 Gemini Multimodal Explanation Panel
+### 3.10 Gemini Explanation Panel
 
 **Deep-Dive Explanation Structure:**
 
 For selected anomalies, display:
 - Finding (description of detected anomaly)
-- Visual Evidence (reference to specific image region with interactive bounding box/highlight)
+- Visual Evidence (reference to specific photo region with interactive bounding box/highlight)
 - Visual reasoning (explanation of classification logic)
 - Status (OBSERVED VISUAL EVIDENCE / POSSIBLE INTERPRETATION)
 - Limitation disclaimer
 
 **Functionality:**
 - Provide detailed explanation for user-selected anomalies
-- Link explanation to corresponding spatial evidence in image with interactive highlight
+- Link explanation to corresponding spatial evidence in photo with interactive highlight
 - Display visual reasoning process
 - Clearly indicate epistemic status of each finding
 - Show explicit limitations of visual analysis
 
-### 3.12 Tamper-Evident Evidence Record & Cryptography
+### 3.11 Tamper-Evident Evidence Record
 
 **Record Details:**
-- Audit ID
+- Evidence ID
+- Crop/Commodity
 - Lot ID
-- Crop type
 - Capture timestamp
 - Location
 - Device/session metadata
-- Original image reference & hash
-- Analysis version
-- Evidence findings snapshot (complete data package)
+- 2-3 uploaded photos with references
+- Capture quality status
+- Visual observations summary
+- Evidence status (OBSERVED / POSSIBLE / UNVERIFIED)
+- Highlighted bounding boxes data
+- Limitations statement
 
 **Cryptographic Hash:**
 - Compute genuine SHA-256 cryptographic hash of canonical evidence JSON package
 - Display hash value prominently
+- Use terminology \"tamper-evident\" NOT \"immutable\"
 
-**Tamper Verification Widget:**
+**Hash Verification Widget:**
 - Allow hash integrity checking
 - Enable verification against modified data
 - Show verification result (match/mismatch)
 
 **Explanation:**
-- Display clear explanation: \"The hash helps detect changes to the recorded digital evidence after creation. It does not prove that the photographed sample was representative of the entire lot.\"
+- Display clear explanation: \"The hash is tamper-evident—it helps detect changes to the recorded digital evidence after creation. It does not prove that the photographed sample was representative of the entire lot, nor does it prevent creation of fraudulent initial records.\"
+
+**Mandatory Disclaimer:**
+- \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
 
 **Functionality:**
 - Generate canonical JSON representation of complete evidence package
@@ -431,86 +408,90 @@ For selected anomalies, display:
 - Provide hash verification interface
 - Compare stored hash with recomputed hash to detect tampering
 - Display verification status
+- Display mandatory disclaimers
 - Proceed to Evidence Card generation
 
-### 3.13 Evidence Card & Shareable Web Report / Export
+### 3.12 Evidence Card & Shareable Report / Export
 
-**Premium Shareable Report Card:**
+**Evidence Card Content:**
 
 Title: KisanDrishti Tamper-Evident Visual Record
 
 Content:
-- Audit metadata (ID, crop, lot, timestamp, location)
-- Summary metrics (observable visual evidence: broken/damaged candidates, discoloration candidates, foreign objects, defect severity breakdown)
-- Key visual evidence thumbnail
+- Evidence metadata (ID, crop/commodity, lot, timestamp, location)
+- Summary metrics (observable visual evidence: broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage)
+- Key visual evidence thumbnails (2-3 photos)
 - Evidence matrix summary
-- Cryptographic hash
-- Disclaimer: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
+- Highlighted bounding boxes visualization
+- Cryptographic hash (tamper-evident)
+- Limitations statement
+- Mandatory disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
+- Additional disclaimer: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
 
 **Export Options:**
 - Export to PDF
-- Printable view
 - Shareable web link (recipient view mode without app install requirement)
+- QR code generation for quick access
 - Copy Link button
 - WhatsApp share with preformatted evidence summary
+
+**Interactive Viewer:**
+- Zoom and anomaly highlights
+- Navigate between photos
+- View detailed findings
 
 **Functionality:**
 - Generate formatted evidence card
 - Render PDF version for download
 - Create shareable web link with unique URL
+- Generate QR code for evidence access
 - Format WhatsApp message with evidence summary and link
 - Enable one-click sharing to WhatsApp
 - Provide copy-to-clipboard functionality for link
-- Display recipient view mode for shared links (read-only access)
+- Display recipient view mode for shared links (read-only access with interactive viewer)
 
-### 3.14 Evidence History & Repository
+### 3.13 Evidence History & Repository
 
 **Display Elements:**
-- List of previous audits
+- List of previous evidence records
 - Search functionality
 - Filter options (by crop, date range, location, status)
-- Sort options (by date, crop type, anomaly count)
+- Sort options (by date, crop type, visual findings count)
 
-**Audit List Item Display:**
-- Audit ID
-- Crop type and variety
+**Evidence List Item Display:**
+- Evidence ID
+- Crop/Commodity and variety
 - Lot ID
 - Capture date/time
 - Status tags
-- Anomaly summary (broken/damaged, discoloration, foreign objects)
+- Visual findings summary (broken/damaged, discoloration, foreign material)
 - Quick verify hash button
 - Open record button
 
-**Realistic Seed Data:**
-- Preloaded sample audits for: Wheat, Basmati Rice, Mustard, Soybean, etc.
-- Varied anomaly counts and findings
-- Different timestamps and locations
-
 **Functionality:**
-- Display searchable and filterable history of audits
-- Enable search by audit ID, lot ID, crop type, location
-- Provide filtering by crop type, date range, anomaly status
-- Sort audit list by various criteria
+- Display searchable and filterable history of evidence records
+- Enable search by evidence ID, lot ID, crop type, location
+- Provide filtering by crop type, date range, visual findings status
+- Sort evidence list by various criteria
 - Quick hash verification from list view
-- Navigate to full audit record on selection
-- Display realistic seed data for demonstration purposes
+- Navigate to full evidence record on selection
 
-### 3.15 Demo Mode - Fictional Sample
+### 3.14 Demo Mode
 
 **Demo Mode Label:**
-- Clearly labeled as DEMO MODE throughout experience
-- Prominent visual indicator distinguishing demo from real audits
+- Clearly labeled as \"DEMO DATA — NOT A REAL AGRICULTURAL ASSESSMENT\" throughout experience
+- Prominent visual indicator distinguishing demo from real evidence records
 
 **Preloaded Content:**
-- High-fidelity wheat sample image
-- Annotated anomalies with detailed classifications (broken/damaged, discolored, foreign objects)
+- High-fidelity wheat sample photos (main, close-up, context)
+- Annotated anomalies with detailed classifications (broken/damaged, discolored, foreign material)
 - Complete evidence matrix with realistic data
 - Interactive spatial viewer with zoom/pan functionality
 - Gemini explanation panels for selected anomalies
 - Complete evidence record with hash
 
 **Walkthrough Flow:**
-- Guided tour of complete audit process
+- Guided tour of complete evidence creation process
 - Interactive exploration of spatial evidence viewer
 - Demonstration of zoom/pan inspection feature
 - Example evidence matrix and explanations
@@ -520,155 +501,193 @@ Content:
 - Provide dedicated demo mode accessible from dashboard
 - Load preloaded fictional wheat sample with rich annotations
 - Enable full interactive exploration of all features
-- Maintain clear DEMO MODE labeling throughout
-- Allow users to experience complete workflow without creating real audit
+- Maintain clear \"DEMO DATA\" labeling throughout
+- Allow users to experience complete workflow without creating real evidence
 
-### 3.16 How It Works
+### 3.15 How It Works
 
 **Content:**
-- Explanation of KisanDrishti purpose and positioning: visual evidence protocol, not a grading authority or counting tool
-- Step-by-step overview of audit process
+- Explanation of KisanDrishti purpose and positioning: low-cost smartphone-based visual evidence protocol, not a price predictor, laboratory, or grading authority
+- Step-by-step overview of evidence creation process
 - Explanation of visual evidence protocol
-- Description of tamper-evident cryptographic hash
+- Description of tamper-evident cryptographic hash and its limitations
 - Clarification of what KisanDrishti does and does not provide
-- Epistemic humility principles explanation
+- Epistemic framework explanation (OBSERVED, POSSIBLE, UNVERIFIED)
 - Usage guidelines and best practices
-- Core message: \"KisanDrishti does not decide what the crop is worth. It creates standardized visual evidence that both sides can inspect.\"
+- Business model explanation: Free/very-low-cost for farmers; enterprise/procurement/traders/warehouses for bulk evidence management
+- Core message: \"Don't tell both sides what the crop is worth. Give both sides the same visual evidence to inspect.\"
 
 **Functionality:**
 - Display informational content about application
 - Provide educational material on visual evidence protocol
 - Explain limitations and appropriate use cases
+- Describe business model and pricing
 
 ---
 
 ## 4. Business Rules and Logic
 
-### 4.1 Epistemic Humility Principles
+### 4.1 Epistemic Framework
 
 **Feature Categorization:**
 - All analysis results must be categorized as OBSERVED, POSSIBLE, or UNVERIFIED
-- OBSERVED: Features directly visible in image (broken/damaged candidates, discoloration candidates, foreign objects, visible physical damage, approximate visual size/color characteristics where technically reliable)
-- POSSIBLE: Visual interpretations requiring expert confirmation (internal damage indicators, early-stage defects)
-- UNVERIFIED: Measurements requiring laboratory equipment (moisture, protein, chemical composition, internal contamination)
+- OBSERVED: Features directly visible in photos (broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage)
+- POSSIBLE: Visual interpretations requiring expert confirmation
+- UNVERIFIED: Measurements requiring laboratory equipment (moisture, protein, chemical composition, internal defects, nutritional values, internal contamination)
 
-**Prohibited Claims:**
-- Never provide final commercial grade designation
+**Strictly Forbidden Claims:**
+- Never provide moisture percentage
+- Never provide protein percentage
+- Never provide chemical contamination measurements
+- Never provide pesticide residue measurements
+- Never provide internal defect assessments
+- Never provide nutritional value measurements
+- Never provide laboratory measurement values
 - Never calculate rupee deductions or price adjustments
+- Never provide final commercial grade designation
 - Never claim to provide official mandi grading
-- Never fabricate laboratory measurement values
 - Never claim legal or financial adjudication authority
-- Never present grain/object counting as primary value proposition or headline feature
 
 **Uncertainty Visibility:**
 - Confidence scores must be displayed where applicable
 - Limitations must be explicitly stated
 - Unverified measurements must be clearly labeled as \"Not tested\" or \"Not verified\"
-- If vision system cannot confidently segment or analyze sample, display: \"Reliable visual evidence could not be established. Please recapture the sample under better conditions.\"
+- If vision system cannot confidently analyze sample, display: \"Reliable visual evidence could not be established. Please recapture the sample.\"
 
 ### 4.2 Visual Evidence Prioritization
 
 **Primary Observable Evidence:**
-- Broken/damaged grain candidates
-- Discoloration candidates
-- Foreign-object candidates
-- Visible physical damage
-- Critical vs minor visual defects
-- Approximate visual size/color characteristics where technically reliable
-- Sample coverage and capture quality
+- Broken/damaged material
+- Visible discoloration
+- Visible foreign material
+- Abnormal appearance
+- Physical surface damage
+- Capture quality status
 
 **Spatial Evidence Requirement:**
-- Every finding must link back to the original captured image with an interactive bounding box/highlight
+- Every finding must link back to the original captured photo with an interactive bounding box/highlight
 - Users must be able to zoom/pan to inspect flagged observations
 - No finding should be presented without corresponding spatial evidence
 
-**Internal vs. User-Facing Metrics:**
-- Object detection/counting may be used internally by the computer-vision pipeline when necessary
-- Users should NOT be presented with metrics such as \"412 grains detected\" as core value proposition
-- Focus user-facing metrics on observable visual evidence categories
+**Dashboard Metrics:**
+- Evidence Records: total count
+- Capture Quality Pass Rate: percentage
+- Visual Findings: count of records with observable findings
+- Unverified Findings: count of findings requiring lab confirmation
+- Evidence Shared: count of shared records
+- Recent Evidence: chronological list
+- Evidence Timeline: activity visualization
+- Do NOT display gimmicky metrics like \"412 grains detected\"
 
-### 4.3 Enhanced Capture Quality Validation
+### 4.3 Capture Quality Gate Logic
 
-**Real-Time Monitoring:**
-- Continuously monitor lighting level (lux) during live camera feed
-- Continuously monitor tilt/angle using device gyroscope
-- Provide real-time visual feedback (color-coded indicators)
-- Display numerical readings for lux and tilt angle
+**Quality Checks:**
+- Blur detection: Measure image sharpness using Laplacian variance or similar method
+- Shadow detection: Analyze brightness distribution, identify dark regions
+- Lighting assessment: Evaluate overall exposure level, detect underexposure or overexposure
+- Glare detection: Identify overexposed regions or specular highlights
+- Framing check: Verify sample occupies appropriate portion of frame
+- Sample visibility: Ensure sample is distinguishable from background
+- Overlap check: Compare photos to verify different views captured
+- Resolution check: Verify image resolution meets minimum threshold
 
-**Pre-Validation Checks:**
-- Brightness: Evaluate exposure level, detect underexposure or overexposure
-- Contrast: Assess detail visibility and dynamic range
-- Grid Alignment: Detect calibration markers, verify all corners visible
-- Blur: Measure image sharpness, detect motion blur or focus issues
-- Tilt: Validate angle is within acceptable range (e.g., < 10 degrees deviation)
-
-**Failure Thresholds:**
-- Severe tilt: angle > 15 degrees
-- Underexposure: brightness < threshold value
-- Overexposure: brightness > threshold value
-- Grid not found: fewer than 4 corner markers detected
-- Blur: sharpness score < threshold value
-- Poor contrast: contrast ratio < threshold value
+**Pass/Fail Thresholds:**
+- Blur: sharpness score > threshold
+- Shadows: shadow coverage < threshold percentage
+- Lighting: brightness within acceptable range
+- Glare: glare coverage < threshold percentage
+- Framing: sample occupies 30-70% of frame
+- Visibility: sample/background contrast > threshold
+- Overlap: photo similarity < threshold (photos sufficiently different)
+- Resolution: minimum 1920x1080 or equivalent
 
 **Failure Handling:**
 - Trigger explicit failure screen when any check fails
 - List specific failure reasons
 - Provide actionable corrective guidance
-- Enable immediate recapture with one-click action
+- Enable immediate recapture
 
-### 4.4 Defect Severity Classification
+### 4.4 Hybrid Vision Analysis Logic
 
-**Critical Visual Defects:**
-- Severe breakage (grain split into multiple pieces)
-- Large foreign objects (stones, metal, plastic)
-- Extensive discoloration (mold, rot, severe staining)
-- Major physical damage (crushed, severely deformed)
+**Local CV Processing:**
+- Image normalization: adjust brightness, contrast, color balance
+- Sample/background separation: segment sample region from background
+- Quality checks: verify image meets analysis requirements
+- Spatial localization: identify regions of interest
+- Candidate anomaly detection: flag potential anomalies for Gemini analysis
+- Bounding box generation: create spatial coordinates for each candidate
 
-**Minor Visual Defects:**
-- Slight discoloration (minor staining, fading)
-- Small chips or cracks
-- Minor deformation
-- Small foreign matter (dust, chaff)
+**Gemini Multimodal Analysis:**
+- Receive candidate anomaly regions from local CV
+- Perform visual reasoning and classification
+- Categorize anomalies: broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage
+- Generate contextual explanations
+- Assign confidence scores
+- Return classification results and explanations
 
-**Classification Logic:**
-- Evaluate size, extent, and severity of each detected anomaly
-- Assign to Critical or Minor category based on predefined criteria
-- Display breakdown in summary metrics and evidence matrix
+**Result Integration:**
+- Combine local CV and Gemini results
+- Generate evidence matrix with categorized findings
+- Create spatial viewer data with bounding boxes
+- Compute overall evidence summary metrics
 
-### 4.5 Measurement Ruler Tool Logic
+### 4.5 Tamper-Evident Hash Logic
 
-**Measurement Process:**
-- User enables ruler tool mode
-- User clicks first point on grid
-- User clicks second point on grid
-- System calculates pixel distance between points
-- System converts pixel distance to millimeters using calibration grid reference (10cm × 10cm = 100mm × 100mm)
-- System displays measurement line with distance label
+**Hash Generation:**
+- Create canonical JSON representation of complete evidence package including: evidence metadata, photo references, analysis results, timestamp, device metadata, visual observations, evidence status, bounding boxes data, limitations statement
+- Compute SHA-256 hash of canonical JSON string
+- Store hash with evidence record
 
-**Calibration Reference:**
-- Use detected grid markings (1mm / 1cm ticks) as reference
-- Calculate pixel-to-millimeter conversion ratio
-- Apply conversion to user-selected measurement
+**Hash Verification:**
+- Retrieve stored evidence record
+- Recompute hash from current evidence data
+- Compare stored hash with recomputed hash
+- Display match/mismatch result
+- If mismatch detected, indicate that evidence record has been modified
 
-### 4.6 Side-by-Side Comparison Logic
+**Hash Terminology:**
+- Use \"tamper-evident\" NOT \"immutable\"
+- Clarify that hash detects post-recording digital edits
+- Clarify that hash does NOT prove truthful sampling
+- Clarify that hash does NOT prevent creation of fraudulent initial records
 
-**Comparison Targets:**
-- Historical lot audit: Previous audit of same lot ID
-- Baseline grade standard: Predefined reference standard for crop type
+**Hash Limitations:**
+- Hash verifies digital record integrity only
+- Hash does not prove sample representativeness of entire lot
+- Hash does not prevent creation of fraudulent initial records
 
-**Comparison Metrics:**
-- Broken/damaged candidates percentage
-- Discoloration candidates percentage
-- Foreign objects count
-- Critical defects count/percentage
-- Minor defects count/percentage
+### 4.6 Sample Representativeness
 
-**Comparison Display:**
-- Show current audit and comparison target side-by-side
-- Highlight differences with color-coded indicators (red for worse, green for better, gray for similar)
-- Display comparative summary text
+**User Responsibility:**
+- Application provides tools for standardized capture
+- User is responsible for selecting representative sample
+- Instructions guide user to capture typical portion of lot
+- Instructions explicitly state: \"Do not pick only the best or worst grains\"
 
-### 4.7 Multi-Language Support
+**No Guarantees:**
+- Application does not guarantee sample representativeness
+- Application does not verify that photographed sample matches actual lot
+- Mandatory disclaimer clearly states: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
+
+### 4.7 Optional Alignment Sheet/Mat
+
+**Purpose:**
+- Helps with framing, scale, and color reference only
+- Not a rigid 10cm × 10cm lab constraint
+- Strictly optional, not required for evidence creation
+
+**Usage:**
+- User can download and print low-cost alignment sheet
+- User places sample on sheet for capture
+- Sheet provides visual reference for framing and scale
+- Sheet does NOT require arranging or counting individual grains
+
+**Constraints:**
+- Do not enforce rigid sample size or arrangement
+- Do not require precise grain placement
+- Do not use sheet for grain counting or measurement
+
+### 4.8 Multi-Language Support
 
 **Supported Languages:**
 - English
@@ -687,78 +706,46 @@ Content:
 - Evidence matrix labels
 - Disclaimer text
 
-### 4.8 Cryptographic Hash Logic
+### 4.9 Business Model
 
-**Hash Generation:**
-- Create canonical JSON representation of complete evidence package including: audit metadata, image reference, analysis results, timestamp, device metadata
-- Compute SHA-256 hash of canonical JSON string
-- Store hash with evidence record
+**Farmer Tier:**
+- Free or very-low-cost access
+- Core evidence creation functionality
+- Basic sharing and export features
 
-**Hash Verification:**
-- Retrieve stored evidence record
-- Recompute hash from current evidence data
-- Compare stored hash with recomputed hash
-- Display match/mismatch result
-- If mismatch detected, indicate that evidence record has been modified
+**Enterprise Tier:**
+- Paid subscription for enterprise/procurement/traders/warehouses
+- Bulk evidence management features
+- Advanced search and filtering
+- Analytics and reporting
+- API access for integration
+- Priority support
 
-**Hash Limitations:**
-- Hash verifies digital record integrity only
-- Hash does not prove sample representativeness of entire lot
-- Hash does not prevent creation of fraudulent initial records
+### 4.10 Data Flow
 
-### 4.9 Sample Representativeness
-
-**User Responsibility:**
-- Application provides tools for standardized capture
-- User is responsible for selecting representative sample
-- Calibration sheet provides standardized capture area
-- Instructions guide user to capture entire sample without cherry-picking
-
-**No Guarantees:**
-- Application does not guarantee sample representativeness
-- Application does not verify that photographed sample matches actual lot
-- Disclaimer clearly states these limitations
-
-### 4.10 Image Quality Requirements
-
-**Quality Indicators:**
-- Lighting level (lux estimate)
-- Angle/tilt deviation from optimal
-- Focus/sharpness assessment
-- Calibration grid detection success
-- Overall quality score
-
-**Quality Feedback:**
-- Real-time warnings during capture if quality indicators are suboptimal
-- Recommendations for improving capture conditions
-- Allow user to proceed even with quality warnings (user decision)
-
-### 4.11 Data Flow
-
-**Audit Creation Flow:**
-1. User enters audit metadata
-2. System generates unique audit ID and session identifier
-3. User reviews sample preparation checklist
-4. User views calibration sheet
-5. User captures image using live camera feed with real-time quality monitoring
-6. System performs pre-validation quality checks
-7. If validation fails, system displays failure screen with recapture guidance
-8. If validation passes, system performs local CV processing
-9. System sends image to Gemini for multimodal analysis
-10. System combines local CV and Gemini results
-11. System generates evidence matrix and spatial viewer data (prioritizing observable visual evidence)
-12. System computes cryptographic hash of evidence package
-13. System stores complete evidence record
-14. User can view, share, or export evidence record
+**Evidence Creation Flow:**
+1. User selects crop/commodity and enters metadata
+2. System generates unique evidence ID
+3. User views capture instructions
+4. User captures 2-3 photos (main, close-up, optional context)
+5. System performs automatic capture quality gate checks
+6. If quality gate fails, system displays failure screen with recapture guidance
+7. If quality gate passes, system performs local CV processing
+8. System sends photos to Gemini for multimodal analysis
+9. System combines local CV and Gemini results
+10. System generates evidence matrix and spatial viewer data
+11. System computes tamper-evident SHA-256 hash of evidence package
+12. System stores complete evidence record
+13. User can view, share, or export evidence record
 
 **Evidence Sharing Flow:**
 1. User selects evidence record to share
 2. System generates shareable web link with unique URL
 3. System creates formatted evidence card
-4. User selects sharing method (link copy, WhatsApp, PDF export)
+4. User selects sharing method (link copy, WhatsApp, PDF export, QR code)
 5. Recipient accesses shared link without app installation
-6. Recipient views read-only evidence record
-7. Recipient can verify cryptographic hash
+6. Recipient views read-only evidence record with interactive viewer
+7. Recipient can verify tamper-evident hash
 
 ---
 
@@ -766,84 +753,83 @@ Content:
 
 | Scenario | Handling |
 |----------|----------|
-| Image upload fails | Display error message, allow retry or alternative upload method |
-| Camera access denied | Fallback to image upload interface, display permission request guidance |
-| Live camera stream fails | Fallback to file upload or preset sample selection |
-| Gyroscope/tilt sensor unavailable | Disable tilt monitoring, proceed with other quality checks |
-| Lux sensor unavailable | Disable lux monitoring, proceed with brightness analysis from captured image |
-| Poor lighting detected | Display warning, provide lighting improvement suggestions, allow user to proceed |
-| Severe tilt detected | Trigger failure screen with specific guidance, require recapture |
-| Calibration grid not detected | Trigger failure screen with alignment guidance, require recapture |
-| Blurry image detected | Trigger failure screen with focus/stability guidance, require recapture |
-| Underexposure detected | Trigger failure screen with lighting guidance, require recapture |
-| Overexposure detected | Trigger failure screen with lighting reduction guidance, require recapture |
-| Vision system cannot confidently analyze sample | Display: \"Reliable visual evidence could not be established. Please recapture the sample under better conditions.\" Do NOT invent results |
+| Photo capture fails | Display error message, allow retry |
+| Camera access denied | Display permission request guidance, provide instructions to enable camera access |
+| Capture quality gate fails | Display failure screen with specific reasons and corrective guidance, require recapture |
+| Multiple quality checks fail simultaneously | List all failure reasons, provide guidance for each, require recapture |
+| User skips optional context photo | Allow evidence creation with 2 photos only |
+| Vision system cannot confidently analyze sample | Display: \"Reliable visual evidence could not be established. Please recapture the sample.\" Do NOT invent results |
 | Gemini API unavailable | Fallback to local CV analysis only, display notice that multimodal analysis is unavailable |
 | Network connection lost during analysis | Save progress locally, retry when connection restored, display connection status |
 | Hash verification fails | Display clear tampering warning, show original vs. current hash values |
 | Shared link accessed after record deletion | Display \"Record not found\" message |
-| User attempts to edit completed audit | Display message that audits are immutable, suggest creating new audit |
-| Sample size not specified | Default to \"Not specified\" in record, allow audit to proceed |
-| Location field empty | Default to \"Not specified\" in record, allow audit to proceed |
+| User attempts to edit completed evidence record | Display message that evidence records are tamper-evident and cannot be edited, suggest creating new evidence |
+| Location field empty | Default to \"Not specified\" in record, allow evidence creation to proceed |
 | No anomalies detected | Display \"No visual anomalies detected\" with appropriate messaging, proceed normally |
-| Extremely high anomaly count (>50%) | Display result without judgment, no special handling |
-| Unsupported crop type entered | Allow custom text entry, proceed with analysis using general grain detection |
+| Extremely high anomaly count | Display result without judgment, no special handling |
+| Unsupported crop type entered | Allow custom text entry, proceed with analysis using general material detection |
 | Multiple users access same shared link simultaneously | Each user gets independent read-only view, no conflict |
-| Ruler tool used on non-grid area | Display warning that measurement may be inaccurate outside calibrated grid |
-| Comparison target not available | Display message that comparison cannot be performed, proceed without comparison |
-| Language change during active audit | Apply language change immediately to all UI elements |
-| Recapture after multiple failures | Allow unlimited recapture attempts, provide persistent guidance |
+| Language change during active evidence creation | Apply language change immediately to all UI elements |
+| Recapture after multiple quality gate failures | Allow unlimited recapture attempts, provide persistent guidance |
+| User attempts to create evidence without internet connection | Display message that internet connection is required for Gemini analysis, allow local CV processing only with notice |
+| Photo file size exceeds limit | Compress photo automatically, display notice if compression affects quality |
+| Device storage full | Display storage warning, suggest deleting old evidence records or photos |
+| Alignment sheet not available | Allow evidence creation without alignment sheet, display notice that sheet is optional |
 
 ---
 
 ## 6. Acceptance Criteria
 
-1. User navigates to KisanDrishti home page and sees application name, tagline \"Evidence Before Valuation\", disclaimer stating the app does not decide crop worth but creates standardized visual evidence, and action buttons
-2. User clicks Start New Audit, enters crop type \"Wheat\", lot ID \"LOT-2026-001\", location \"Punjab\", sample size \"250g\", and proceeds
-3. User views interactive sample preparation checklist with items (clean grid, even spread, ambient daylight, camera perpendicular), marks items as completed, and proceeds
-4. User views calibration sheet with 10cm × 10cm boundary, grid markings, color patches, alignment markers, downloads/prints the sheet, and places wheat sample on it
-5. User accesses enhanced capture screen with live camera feed, sees real-time lux meter reading (450 lux, green status), tilt sensor reading (2 degrees, green status), sample boundary overlay, and alignment indicators
-6. User captures image using canvas snapshot from live stream, system performs pre-validation quality checks (brightness, contrast, grid alignment, blur, tilt), all checks pass, and proceeds to analysis
-7. System processes image through local CV and Gemini analysis, displaying progress indicators
-8. User views Live Audit Result dashboard showing observable visual evidence metrics: Broken/Damaged Candidates 6.4%, Discoloration Candidates 1.8%, Foreign Objects 2, Critical Visual Defects 3 (4.2%), Minor Visual Defects 5 (7.1%), with interactive spatial viewer displaying numbered markers for each flagged observation
-9. User taps on a \"Foreign Object\" marker, triggering smooth zoom/pan animation to that region with interactive bounding box highlight and displaying detailed inspection card
-10. User enables ruler tool, clicks two points on grid, system displays measurement line with distance label \"12.5 mm\"
-11. User selects side-by-side comparison mode, chooses historical lot audit as comparison target, views current audit and historical audit side-by-side with comparative summary showing differences in observable metrics
-12. User switches language to Hindi using multi-language toggle, all UI text and labels update to Hindi immediately
-13. User navigates to Evidence Matrix and sees structured table with OBSERVED categories (broken/damaged candidates, discoloration candidates, foreign objects, critical defects, minor defects) and UNVERIFIED measurements clearly labeled \"Not tested\" (moisture, protein, chemical composition, internal contamination)
-14. User views Tamper-Evident Evidence Record showing audit metadata, SHA-256 hash, hash verification widget, and explanation of hash limitations
-15. User generates shareable Evidence Card with disclaimer \"KisanDrishti does not decide what the crop is worth\", exports to PDF, and shares via WhatsApp with preformatted message containing evidence summary and web link
-16. Recipient opens shared web link without app installation and views read-only evidence record with ability to verify cryptographic hash
-17. User navigates to Evidence History, searches for \"Wheat\" audits, filters by date range, and opens a previous audit record showing observable visual evidence summary
+1. User opens KisanDrishti mobile app and sees dashboard displaying Evidence Records count, Capture Quality Pass Rate, Visual Findings count, Recent Evidence list, and prominent disclaimer stating the app provides visual evidence only and does not decide crop worth
+2. User taps Create Evidence button, selects crop \"Wheat\", enters lot ID \"LOT-2026-001\", location \"Punjab\", and proceeds
+3. User views capture instructions stating \"Take 2-3 smartphone photos of a representative sample\", \"Do not pick only the best or worst grains\", \"Place sample on clean visible surface\", and optional alignment sheet download link
+4. User captures main sample photo using smartphone camera, system displays photo counter \"1/2\" and preview thumbnail
+5. User captures close-up photo, system displays photo counter \"2/2\" and preview thumbnail, user proceeds to quality gate
+6. System performs automatic capture quality gate checks (blur, shadows, lighting, glare, framing, sample visibility, overlap, resolution), all checks pass, system proceeds to analysis
+7. System processes photos through local CV (image normalization, sample/background separation, spatial localization, candidate anomaly detection) and sends to Gemini for multimodal analysis, displaying progress indicators
+8. User views Evidence Result dashboard showing observable visual evidence metrics: Broken/Damaged Material 6.4%, Visible Discoloration 1.8%, Visible Foreign Material 2, with interactive spatial viewer displaying numbered markers on main and close-up photos
+9. User taps on \"Visible Foreign Material\" marker, triggering smooth zoom/pan animation to that region with interactive bounding box highlight and displaying detailed inspection card with Gemini explanation
+10. User navigates to Evidence Matrix and sees structured table with OBSERVED categories (broken/damaged material, visible discoloration, visible foreign material, abnormal appearance, physical surface damage) and UNVERIFIED measurements clearly labeled \"Not tested\" (moisture, protein, chemical composition, internal defects, nutritional values)
+11. User views Tamper-Evident Evidence Record showing evidence metadata, 2 uploaded photos with references, capture quality status, visual observations summary, SHA-256 hash, hash verification widget, and mandatory disclaimer: \"This record describes visual observations from the captured sample. It does not prove that the captured sample represents the entire lot.\"
+12. User generates shareable Evidence Card with disclaimers, exports to PDF, and shares via WhatsApp with preformatted message containing evidence summary and web link
+13. Recipient opens shared web link on any device without app installation and views read-only evidence record with interactive viewer, zoom/pan functionality, and ability to verify tamper-evident hash
+14. User navigates to Evidence History, searches for \"Wheat\" evidence records, filters by date range, and opens a previous evidence record showing observable visual evidence summary
+15. User accesses Demo Mode clearly labeled \"DEMO DATA — NOT A REAL AGRICULTURAL ASSESSMENT\" and explores preloaded wheat sample with annotated anomalies, interactive spatial viewer, and complete evidence record
 
 ---
 
 ## 7. Out of Scope for Current Release
 
-- Grain/object counting as primary user-facing metric or headline feature
+- Specialized cameras, spectrometers, IoT sensors, laboratory equipment, paid hardware, or expensive physical kits
+- Moisture measurement or moisture meter integration
+- Protein measurement or protein analyzer integration
+- Chemical composition analysis or chemical testing equipment integration
+- Pesticide residue testing
+- Internal defect detection requiring specialized equipment
+- Nutritional value measurement
 - Official mandi grading integration
-- Laboratory testing integration (moisture meters, protein analyzers, chemical testing equipment)
-- Financial calculation features (price estimation, deduction calculation, payment processing)
+- Financial calculation features (price estimation, rupee deduction calculation, payment processing)
 - Legal adjudication or dispute resolution mechanisms
+- Grain/object counting as primary user-facing metric or headline feature
+- Rigid 10cm × 10cm lab constraint for sample placement
+- Mandatory alignment sheet requirement
+- Grain arrangement or counting instructions
 - Multi-user collaboration features (shared workspaces, team accounts)
 - Blockchain integration for evidence storage
 - Automated sample collection robotics
 - Real-time market price integration
 - Buyer/seller matching or marketplace features
 - Contract management or transaction tracking
-- Offline mode with full functionality
-- Advanced statistical analysis or trend reporting across multiple audits
+- Advanced statistical analysis or trend reporting across multiple evidence records
 - Integration with government agricultural databases
 - Automated notification system for buyers/sellers
 - Video capture of sample preparation process
 - 3D imaging or depth sensing for volumetric analysis
 - Spectroscopy or hyperspectral imaging
 - Machine learning model training interface for users
-- API access for third-party integrations
 - White-label or customization options for different regions/crops
-- Automated calibration sheet generation with dynamic QR codes
-- Cloud-based image storage and synchronization
-- User authentication and account management
+- Cloud-based photo storage and synchronization (beyond evidence record storage)
+- User authentication and account management (beyond basic session management)
 - Advanced image editing or enhancement tools
 - Batch processing of multiple samples
 - Integration with external sensors (dedicated lux meters, professional tilt sensors)
